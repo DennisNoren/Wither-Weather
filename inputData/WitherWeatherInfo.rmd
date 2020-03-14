@@ -1,0 +1,75 @@
+---
+title: "Wither Weather Information"
+author: "Dennis Noren"
+output: html_document
+---
+
+### Data Sources
+
+#### This app uses data published electronically by the National Centers for Environmental Information (NCEI) of the National Oceanic and Atmospheric Administration (NOAA). The data requests are handled by NCEI's API, and information can be obtained from their website:  
+https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation  
+
+#### The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.
+
+#### The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA's pre-computed "normal" minimum and maximum temperatures for that day of the year and location.
+
+### Data Access
+
+#### In order to use NOAA's API, one needs to request and use an API access token, or "key". Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process. 
+
+### Preprocessing
+
+TBS
+
+### Getting Initial Plots
+
+#### Then select the Temperature tab at the top, which transfers you to a different display. You can accept all default values and click the ‘Go’ button to see a result, but you will have to wait for the data to appear. This is because there are several API calls to be made to the NOAA website. The response time depends mostly on the length of the range of dates requested.
+
+### Internal processing Steps
+
+TBS  
+
+#### The app does this processing:  
+
+##### - Grabs the two selected cities,  
+
+##### - Requests/receives data from nearby weather stations,  
+
+##### - Interpolates among weather stations,
+
+##### - Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,  
+
+##### - Displays the number of stations used, and if you hover the cursor over this, displays the distances to stations.  
+
+### User Interface Options
+
+TBS  
+
+#### You can then interact with the displayed data and make new data requests. The plotted daily values will probably have a very jagged appearance, especially if you have selected multiple years, but you can use controls to change this:  
+
+##### - Use your mouse within a plot to select a particular date, and the exact data values will appear at the top of the plot.   
+
+##### - Drag the cursor across a range of dates in either the top or bottom plot; this will zoom in for both plots, stretching the data horizontally across the plot area. To return to the full data range, double click within either plot.  
+
+##### - Notice the small numeric value displayed on the lower left corner of both plots. To apply a moving average, change this to a higher value and type ‘return’ to activate. This is applied immediately; a value somewhere between 5 and 20 is a reasonable choice, but feel free to experiment.  
+
+##### - On the left panel, you can select and apply different begin and end dates, search radius, maximum number of stations to search for, and a Butterworth high pass filter. To select dates, click on the existing date and interact with the selector; double click on the year After selection, you must select the ‘Go’ button to initiate the request. Then you wait again for the requests to be made and the data to be processed.  
+##### - You might want to select a higher filter frequency than the default, say 12, 13, or 14, which will smooth/generalize more. Moving the frequency below 8 might not be a useful transformation because it will accentuate the day-by-day variations. If you have selected many years of data, the high pass filter might not produce a result – it may be that no daily values are plotted.  
+
+##### - You can continue to try new input parameter combinations on the selected cities, or return to the Cities tab to select new cities.  
+
+##### - Select the ‘Close’ button to close the application.
+
+### Comments on Use of this App  
+
+TBS  
+
+### Plans (Potentially) for New Capabilities
+
+#### In order of priority:  
+ 
+- Add a Map panel to show where all the cities and weather stations are, as well as the zooming in on the selected cities & stations.  
+- Add daily all-time record minimum/maximum temperatures.  
+- Add precipitation as an option.  
+- Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
+- Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?
