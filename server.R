@@ -168,7 +168,6 @@ shinyServer(function(input, output, session) {
     actuals2 <- transmute(actuals2, city, date, station, invdsq,
       nMaxWt = multNA(tmax,invdsq), nMidWt = multNA(tmid,invdsq),
       nMinWt = multNA(tmin,invdsq), cityNum)
-#  saveRDS(actuals2, file=here("outputData", #"actuals2.rds"))
     actuals2 <- group_by(actuals2, city, date) %>%
       summarise(NormMax = sum(nMaxWt, na.rm = TRUE),
                 NormMid = sum(nMidWt, na.rm = TRUE),
@@ -243,7 +242,6 @@ shinyServer(function(input, output, session) {
   varsMeas <- c("MaxTemp","MinTemp","MaxNorm","MidNorm","MinNorm")
   vars <- c(varsID, varsMeas)
   city1 <- select(.data = city1, vars)
-  saveRDS(city1, file = here::here("outputData", "city1.rds"))
   city2 <- select(.data = city2, vars)
   if (input$metric == "cels") {
     city1 <- city1 %>%
