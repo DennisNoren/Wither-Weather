@@ -1,12 +1,12 @@
 ---
-title: "Wither Weather Help"
+title: "Whither-Weather Help"
 author: "Dennis Noren"
 output: html_document
 ---
 
 ### Getting Started
 
-#### When the Wither Weather app opens, you see a list of cities. The idea is to select two cities for examination of their temperature patterns. You select by simply clicking on the city’s row (unselect by clicking again). Use the controls at the bottom to move to different pages. You can also search by typing text in the search box at the top (the search text applies to both city and state names). There are about 675 cities listed, all among the 48 co-terminus United States. The two most recently selected cities are the ones to be used. There are about 4600 weather stations used.  
+#### When the Whither Weather app opens, you see a list of cities. The idea is to select two cities for examination of their temperature patterns. You select by simply clicking on the city’s row (unselect by clicking again). Use the controls at the bottom to move to different pages. You can also search by typing text in the search box at the top (the search text applies to both city and state names). There are about 675 cities listed, all among the 48 co-terminus United States. The two most recently selected cities are the ones to be used. There are about 4600 weather stations used.  
 
 ### Getting Data Displayed
 

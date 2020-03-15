@@ -1,5 +1,5 @@
 ---
-title: "Wither Weather Information"
+title: "Whither Weather Information"
 author: "Dennis Noren"
 output: html_document
 ---

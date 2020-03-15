@@ -1,4 +1,4 @@
-# shiny server script for "WitherWeather" app
+# shiny server script for "Whither-Weather" app
 
 library(shiny)
 library(rnoaa)
@@ -35,10 +35,6 @@ tCelsToFahr <- function(tenthCels) {tenthCels*1.8/10 + 32}
 FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
-
-  # getPage <- function() {
-  #   return(includeHTML(here("inputData", "WitherWeatherHelp.html")))
-  # }
   
     # citySelect returns a DF with the user-selected cities in Cities tab
   citySelect <-  eventReactive(input$goButton, {

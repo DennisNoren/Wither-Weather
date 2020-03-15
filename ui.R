@@ -1,4 +1,4 @@
-# shiny ui script for "WitherWeather" app
+# shiny ui script for "Whither-Weather" app
 
 library(shiny)
 library(shinyalert)
@@ -6,7 +6,7 @@ library(here)
 library(dygraphs)
 
 # Define UI for application that draws a histogram
-shinyUI(navbarPage("Wither Weather !!",
+shinyUI(navbarPage("Whither Weather !!",
 
   tabPanel("Cities", # user selects two cities for processing/display
     title = 'Cities',
@@ -18,7 +18,7 @@ shinyUI(navbarPage("Wither Weather !!",
       sidebarPanel(
         useShinyalert(),
         dateRangeInput("dates", label = h5("Begin/End Date"),
-          start = "2013-01-01", end = "2014-12-31", separator=":"),
+          start = "2013-05-01", end = "2014-12-31", separator=":"),
         numericInput("searchRadius", "Search Radius (km)",
           value = 25, step = 1, min = 3, max = 50, width = NULL),
         numericInput("limit", "Max stations",
