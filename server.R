@@ -12,8 +12,14 @@ library(stringr)
 library(mFilter)
 library(shinyalert)
 
-# Note: need NOAA API key. Recommend placing it in .RProfile
+readRenviron(file.path("~", ".Renviron"))
+#print(Sys.getenv("noaakey"))
+# Note: need NOAA API key.
 # https://www.ncdc.noaa.gov/cdo-web/webservices/v2
+# Placing it in .RProfile works well for individual use, as such:
+# options(noaakey = "thekeywithabout32characters")
+# Placing it in .Renviron works well for shinyapps.io, as such:
+# noaakey = "thekeywithabout32characters"
 
 # 679 cities, all from CONUS
 cities <- readRDS(here::here("inputData", "cities.rds"))
