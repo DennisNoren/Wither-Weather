@@ -36,11 +36,22 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
   
+  observe({
+    cit <- input$ex1_rows_selected
+    cities <- cities[rev(cit), ] # reversing so latest 2
+    city1 <- paste0(cities[1,1],", ", cities[1,5])
+    city2 <- paste0(cities[2,1],", ", cities[2,5])
+    cityText <- paste0("Cities Selected:","\n",
+                       city1, "\n", city2, "\n")
+    output$citiesSelected = renderText(cityText)
+  })
+                                                  
     # citySelect returns a DF with the user-selected cities in Cities tab
   citySelect <-  eventReactive(input$goButton, {
     cit <- input$ex1_rows_selected
     cities <- cities[rev(cit), ] # reversing so latest 2 selected are at top
     cities
+   
   })
 
 
