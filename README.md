@@ -1,4 +1,4 @@
-# WitherWeather
+# Whither-Weather
 Shiny app for processing/displaying weather data
 
 Dennis Noren, individual non-sponsored project.
@@ -25,5 +25,7 @@ To fix/extend:
 Are there any stations that have no normals available? e.g., station #1001
 
 Build option for computing/displaying percentile values, using those as y axis, perhaps involving pre-processing. (long-term)
+
+Compute and display all-time min-max temperatures.
 
 Build map panel: overview map of 48 states, and two zoom maps
