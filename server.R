@@ -286,13 +286,14 @@ shinyServer(function(input, output, session) {
     gs <- getStations()
     city1 <- smoother()[[1]]
     msg <- paste("Number of stations = ", (gs[[2]][1]))
+    dist <- paste(round((data.frame(gs[[1]][1]))[,5],1), collapse=",")
     dygraph(city1, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
       dyLegend(width = 500) %>%
       dyGroup(c("MaxTemp", "MinTemp"),
-          color=c("red", "blue"), strokeWidth=1.5) %>%      
+        color=c("red", "blue"), strokeWidth=1.5) %>%      
       dyAnnotation(x= meanDate(), text=msg,
-        tooltip = round((data.frame(gs[[1]][1]))[,5],1),
+        tooltip = paste("Distances in km =", dist),
         attachAtBottom=TRUE, width=180, height=22) %>%
       dyOptions(drawGrid = TRUE) %>%
       dyRoller(rollPeriod = 1) %>%
@@ -306,14 +307,15 @@ shinyServer(function(input, output, session) {
     gs <- getStations()
     city2 <- smoother()[[2]]
     msg <- paste("Number of stations = ", (gs[[2]][2]))
+    dist <- paste(round((data.frame(gs[[1]][2]))[,5],1), collapse=",")
     dygraph(city2, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
       dyLegend(width = 500) %>%
       dyGroup(c("MaxTemp","MinTemp"),
-          color=c("red","blue"), strokeWidth=1.5) %>%      
+        color=c("red","blue"), strokeWidth=1.5) %>%      
       dyAnnotation(x= meanDate(),text=msg,
-          tooltip = round((data.frame(gs[[1]][2]))[,5],1),
-          attachAtBottom=TRUE, width=180, height=22) %>%
+        tooltip = paste("Distances in km =", dist),
+        attachAtBottom=TRUE, width=180, height=22) %>%
       dyOptions(drawGrid = TRUE) %>%
       dyRoller(rollPeriod = 1) %>%
       dySeries(c("MaxNorm","MidNorm","MinNorm"),color="blue",strokeWidth=0)
