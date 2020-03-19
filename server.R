@@ -37,8 +37,8 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 shinyServer(function(input, output, session) {
   
   quickText <- paste0("If you have selected two cities, click 'Go' button,",
-    "\n", "or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n",
-    "Each time you change any cities or controls, click 'Go' button again.")
+    "\n", " or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n",
+    "Each time you change any cities or controls, click 'Go' button again.", "\n","For more detail, look at Help tab.")
   output$quickInfo <- renderText(quickText)
   output$citiesHelp <- renderText("Click to select two cities. Use page navigation and search box if desired. Then click 'Temperatures' tab.")
   
@@ -69,11 +69,14 @@ shinyServer(function(input, output, session) {
   #   where k is the maximum number to return.
   getStations <- eventReactive(input$goButton, {
     cityList <- citySelect()
-    # if (nrow(cityList) < 2) return("error")
-    #  else
     # 'top_n' grabs the bottom 2 from the list, 
     #   which are the most recently selected cities
     cityList <- top_n(cityList, 2)
+#    if (is.na(cityList$id[1] || is.na(cityList$id[2]))) {
+    if (nrow(cityList) < 2) {
+        shinyalert(title = "Must select two cities. Return to Cities tab",
+                 type = "error", closeOnClickOutside = TRUE)
+    }
      
     nearStations <- meteo_nearby_stations(cityList, station_data = stations,
       var = c("TMAX", "TMIN"), lat_colname = "latitude", 
@@ -268,7 +271,6 @@ shinyServer(function(input, output, session) {
     city2 <- city2 %>%
       mutate_at(varsMeas, FahrToCels)
   }
-#  xt1 <- xts(as.matrix(city1[,3:7]), order.by = city1$date)
   xt1 <- xts(as.matrix(city1[,3:7]), order.by = city1$date)
   xt2 <- xts(as.matrix(city2[,3:7]), order.by = city2$date)
   list(xt1, xt2)

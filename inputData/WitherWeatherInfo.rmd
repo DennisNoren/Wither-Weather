@@ -7,43 +7,51 @@ output: html_document
 ### Data Sources
 
 #### This app uses data published electronically by the National Centers for Environmental Information (NCEI) of the National Oceanic and Atmospheric Administration (NOAA). The data requests are handled by NCEI's API, and information can be obtained from their website:  
-https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation  
+https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation
 
-#### The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.
+#### The set of cities was obtained from the company Simplemaps, using a free option for a basic set of world cities, with a last update of that time as 2015. Their sources are primarily the National Geospatial Intelligence Agency(NGIA), the US Geological Survey, and the US Census Bureau. This basic data set was filtered for U.S. cities in the co-terminus U.S., and further filtered for those cities which have sufficient nearby weather stations.  
+https://simplemaps.com/data/world-cities
+
+#### This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), and there are some suspect data values.
+
+#### The R source code and input files are accessible on github here:  
+https://github.com/DennisNoren/Wither-Weather  
+
+#### The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.  
 
 #### The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA's pre-computed "normal" minimum and maximum temperatures for that day of the year and location.
 
 ### Data Access
 
-#### In order to use NOAA's API, one needs to request and use an API access token, or "key". Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process. 
+#### In order to use NOAA's API, one needs to request and use a free API access token, or "key". Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process. The key used in this app is my personal key, but it is stored in a file that is not visible to the user.
 
 ### Preprocessing
 
-TBS
+#### As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 9184 stations). In addition, the data about "normal" daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations.
 
 ### Getting Initial Plots
 
 #### Then select the Temperature tab at the top, which transfers you to a different display. You can accept all default values and click the ‘Go’ button to see a result, but you will have to wait for the data to appear. This is because there are several API calls to be made to the NOAA website. The response time depends mostly on the length of the range of dates requested.
 
-### Internal processing Steps
-
-TBS  
+### Internal processing Steps  
 
 #### The app does this processing:  
 
 ##### - Grabs the two selected cities,  
 
-##### - Requests/receives data from nearby weather stations,  
+##### - For the requested data range, requests/receives temperature data from nearby weather stations. Uses specified maximum search distance to try to find the maximum number of stations within that distance.
 
-##### - Interpolates among weather stations,
+##### - Interpolates among weather stations, using an inverse weighted distance algorithm, with order 2. This means that closer cities are weighted much more heavily than further ones.  
+
+##### - Accesses the "normal" daily minimum and maximum temperatures for the selected stations. Applies the same interpolation method as used for the daily actuals.  
+
+##### - Aligns the normals with the actuals.  
 
 ##### - Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,  
 
 ##### - Displays the number of stations used, and if you hover the cursor over this, displays the distances to stations.  
 
-### User Interface Options
-
-TBS  
+### User Interface Options 
 
 #### You can then interact with the displayed data and make new data requests. The plotted daily values will probably have a very jagged appearance, especially if you have selected multiple years, but you can use controls to change this:  
 
@@ -62,7 +70,11 @@ TBS
 
 ### Comments on Use of this App  
 
-TBS  
+##### This app is useful for seeing patterns and variability in temperature data when examined over time spans. The seasonal changes are obvious, but the variability within those may be surprising. One observation is that coastal areas tend to have lower seasonal variation than inland areas, as one would expect. It is easy to notice short term "hot spells" and "cold spells".
+
+##### It might be tempting to use this app as evidence for measuring the amount of long-term warming in the U.S. This may be overstepping the scope of the app, for several reasons. First, only some cities & weather stations are represented. It is not necessarily accurate to make statements about the whole co-terminous 48 states based on these. It is natural, and it makes sense, to compare the raw or smoothed actual temperatures with the "normal" range that has been computed by NOAA over many years, but that should be examined in more detail to see if it is a good daily baseline. Climate scientists have developed more robust measures of these things.
+
+##### However, it can make sense to look at patterns and look for possible trends. Just don't cherry-pick results. At a later time I may add some tools for aggregating temperature averages, medians, differences between actuals and normals, and computing trends. But it will not be a substitute for in-depth scientific measurement and model fitting. For that, see the many excellent climate analysts and their peer-reviewed reports, often summarized by the IPCC and other groups.
 
 ### Plans (Potentially) for New Capabilities
 

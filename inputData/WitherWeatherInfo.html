@@ -189,6 +189,17 @@ summary {
 <h4>This app uses data published electronically by the National Centers for Environmental Information (NCEI) of the National Oceanic and Atmospheric Administration (NOAA). The data requests are handled by NCEI’s API, and information can be obtained from their website:</h4>
 <p><a href="https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation" class="uri">https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation</a></p>
 </div>
+<div id="the-set-of-cities-was-obtained-from-the-company-simplemaps-using-a-free-option-for-a-basic-set-of-world-cities-with-a-last-update-of-that-time-as-2015.-their-sources-are-primarily-the-national-geospatial-intelligence-agencyngia-the-us-geological-survey-and-the-us-census-bureau.-this-basic-data-set-was-filtered-for-u.s.-cities-in-the-co-terminus-u.s.-and-further-filtered-for-those-cities-which-have-sufficient-nearby-weather-stations." class="section level4">
+<h4>The set of cities was obtained from the company Simplemaps, using a free option for a basic set of world cities, with a last update of that time as 2015. Their sources are primarily the National Geospatial Intelligence Agency(NGIA), the US Geological Survey, and the US Census Bureau. This basic data set was filtered for U.S. cities in the co-terminus U.S., and further filtered for those cities which have sufficient nearby weather stations.</h4>
+<p><a href="https://simplemaps.com/data/world-cities" class="uri">https://simplemaps.com/data/world-cities</a></p>
+</div>
+<div id="this-app-is-intended-for-general-interest-in-exploring-software-and-data-acquired-through-public-sources.-i-have-carefully-used-industry-standard-methods-for-processing-the-data-but-i-cannot-guarantee-the-accuracy-of-the-results.-i-subscribe-to-the-ideas-of-reproducible-research-and-have-tried-to-employ-those.-the-user-will-notice-missing-data-in-some-places-gaps-in-the-line-charts-and-there-are-some-suspect-data-values." class="section level4">
+<h4>This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), and there are some suspect data values.</h4>
+</div>
+<div id="the-r-source-code-and-input-files-are-accessible-on-github-here" class="section level4">
+<h4>The R source code and input files are accessible on github here:</h4>
+<p><a href="https://github.com/DennisNoren/Wither-Weather" class="uri">https://github.com/DennisNoren/Wither-Weather</a></p>
+</div>
 <div id="the-data-describe-temperature-precipitation-storms-sea-ice-and-other-phenomena.-the-scope-of-this-data-is-worldwide-but-my-app-focuses-only-on-minimummaximum-daily-temperature-data-for-the-co-terminus-48-united-states-and-the-u.s.-data-is-more-complete-and-has-had-more-thorough-quality-processes-applied.-the-data-have-been-collected-at-a-large-number-of-weather-stations-throughout-the-u.s.-each-with-its-own-beginning-and-end-times-for-collecting-operational-data." class="section level4">
 <h4>The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.</h4>
 </div>
@@ -198,13 +209,15 @@ summary {
 </div>
 <div id="data-access" class="section level3">
 <h3>Data Access</h3>
-<div id="in-order-to-use-noaas-api-one-needs-to-request-and-use-an-api-access-token-or-key.-then-http-protocols-are-available-for-accessing-the-published-datasets.-these-methods-are-awkward-and-involved-but-fortunately-a-convenient-r-package-has-been-developed-to-take-most-of-the-pain-out-of-this-process." class="section level4">
-<h4>In order to use NOAA’s API, one needs to request and use an API access token, or “key”. Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process.</h4>
+<div id="in-order-to-use-noaas-api-one-needs-to-request-and-use-a-free-api-access-token-or-key.-then-http-protocols-are-available-for-accessing-the-published-datasets.-these-methods-are-awkward-and-involved-but-fortunately-a-convenient-r-package-has-been-developed-to-take-most-of-the-pain-out-of-this-process.-the-key-used-in-this-app-is-my-personal-key-but-it-is-stored-in-a-file-that-is-not-visible-to-the-user." class="section level4">
+<h4>In order to use NOAA’s API, one needs to request and use a free API access token, or “key”. Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process. The key used in this app is my personal key, but it is stored in a file that is not visible to the user.</h4>
 </div>
 </div>
 <div id="preprocessing" class="section level3">
 <h3>Preprocessing</h3>
-<p>TBS</p>
+<div id="as-mentioned-above-the-set-of-cities-was-pre-processed-currently-679-cities.-the-set-of-weather-stations-was-also-preprocessed-to-concentrate-on-only-those-stations-which-are-somewhat-near-at-least-one-of-the-selected-cities-currently-9184-stations.-in-addition-the-data-about-normal-daily-temperatures-was-preprocessed-to-produce-a-file-with-only-those-summaries-for-the-selected-weather-stations." class="section level4">
+<h4>As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 9184 stations). In addition, the data about “normal” daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations.</h4>
+</div>
 </div>
 <div id="getting-initial-plots" class="section level3">
 <h3>Getting Initial Plots</h3>
@@ -214,17 +227,22 @@ summary {
 </div>
 <div id="internal-processing-steps" class="section level3">
 <h3>Internal processing Steps</h3>
-<p>TBS</p>
 <div id="the-app-does-this-processing" class="section level4">
 <h4>The app does this processing:</h4>
 <div id="grabs-the-two-selected-cities" class="section level5">
 <h5>- Grabs the two selected cities,</h5>
 </div>
-<div id="requestsreceives-data-from-nearby-weather-stations" class="section level5">
-<h5>- Requests/receives data from nearby weather stations,</h5>
+<div id="for-the-requested-data-range-requestsreceives-temperature-data-from-nearby-weather-stations.-uses-specified-maximum-search-distance-to-try-to-find-the-maximum-number-of-stations-within-that-distance." class="section level5">
+<h5>- For the requested data range, requests/receives temperature data from nearby weather stations. Uses specified maximum search distance to try to find the maximum number of stations within that distance.</h5>
 </div>
-<div id="interpolates-among-weather-stations" class="section level5">
-<h5>- Interpolates among weather stations,</h5>
+<div id="interpolates-among-weather-stations-using-an-inverse-weighted-distance-algorithm-with-order-2.-this-means-that-closer-cities-are-weighted-much-more-heavily-than-further-ones." class="section level5">
+<h5>- Interpolates among weather stations, using an inverse weighted distance algorithm, with order 2. This means that closer cities are weighted much more heavily than further ones.</h5>
+</div>
+<div id="accesses-the-normal-daily-minimum-and-maximum-temperatures-for-the-selected-stations.-applies-the-same-interpolation-method-as-used-for-the-daily-actuals." class="section level5">
+<h5>- Accesses the “normal” daily minimum and maximum temperatures for the selected stations. Applies the same interpolation method as used for the daily actuals.</h5>
+</div>
+<div id="aligns-the-normals-with-the-actuals." class="section level5">
+<h5>- Aligns the normals with the actuals.</h5>
 </div>
 <div id="displays-and-labels-the-data-for-the-two-cities-including-the-normal-range-between-minimum-and-maximum-as-a-light-blue-band" class="section level5">
 <h5>- Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,</h5>
@@ -236,7 +254,6 @@ summary {
 </div>
 <div id="user-interface-options" class="section level3">
 <h3>User Interface Options</h3>
-<p>TBS</p>
 <div id="you-can-then-interact-with-the-displayed-data-and-make-new-data-requests.-the-plotted-daily-values-will-probably-have-a-very-jagged-appearance-especially-if-you-have-selected-multiple-years-but-you-can-use-controls-to-change-this" class="section level4">
 <h4>You can then interact with the displayed data and make new data requests. The plotted daily values will probably have a very jagged appearance, especially if you have selected multiple years, but you can use controls to change this:</h4>
 <div id="use-your-mouse-within-a-plot-to-select-a-particular-date-and-the-exact-data-values-will-appear-at-the-top-of-the-plot." class="section level5">
@@ -264,7 +281,15 @@ summary {
 </div>
 <div id="comments-on-use-of-this-app" class="section level3">
 <h3>Comments on Use of this App</h3>
-<p>TBS</p>
+<div id="this-app-is-useful-for-seeing-patterns-and-variability-in-temperature-data-when-examined-over-time-spans.-the-seasonal-changes-are-obvious-but-the-variability-within-those-may-be-surprising.-one-observation-is-that-coastal-areas-tend-to-have-lower-seasonal-variation-than-inland-areas-as-one-would-expect.-it-is-easy-to-notice-short-term-hot-spells-and-cold-spells." class="section level5">
+<h5>This app is useful for seeing patterns and variability in temperature data when examined over time spans. The seasonal changes are obvious, but the variability within those may be surprising. One observation is that coastal areas tend to have lower seasonal variation than inland areas, as one would expect. It is easy to notice short term “hot spells” and “cold spells”.</h5>
+</div>
+<div id="it-might-be-tempting-to-use-this-app-as-evidence-for-measuring-the-amount-of-long-term-warming-in-the-u.s.-this-may-be-overstepping-the-scope-of-the-app-for-several-reasons.-first-only-some-cities-weather-stations-are-represented.-it-is-not-necessarily-accurate-to-make-statements-about-the-whole-co-terminous-48-states-based-on-these.-it-is-natural-and-it-makes-sense-to-compare-the-raw-or-smoothed-actual-temperatures-with-the-normal-range-that-has-been-computed-by-noaa-over-many-years-but-that-should-be-examined-in-more-detail-to-see-if-it-is-a-good-daily-baseline.-climate-scientists-have-developed-more-robust-measures-of-these-things." class="section level5">
+<h5>It might be tempting to use this app as evidence for measuring the amount of long-term warming in the U.S. This may be overstepping the scope of the app, for several reasons. First, only some cities &amp; weather stations are represented. It is not necessarily accurate to make statements about the whole co-terminous 48 states based on these. It is natural, and it makes sense, to compare the raw or smoothed actual temperatures with the “normal” range that has been computed by NOAA over many years, but that should be examined in more detail to see if it is a good daily baseline. Climate scientists have developed more robust measures of these things.</h5>
+</div>
+<div id="however-it-can-make-sense-to-look-at-patterns-and-look-for-possible-trends.-just-dont-cherry-pick-results.-at-a-later-time-i-may-add-some-tools-for-aggregating-temperature-averages-medians-differences-between-actuals-and-normals-and-computing-trends.-but-it-will-not-be-a-substitute-for-in-depth-scientific-measurement-and-model-fitting.-for-that-see-the-many-excellent-climate-analysts-and-their-peer-reviewed-reports-often-summarized-by-the-ipcc-and-other-groups." class="section level5">
+<h5>However, it can make sense to look at patterns and look for possible trends. Just don’t cherry-pick results. At a later time I may add some tools for aggregating temperature averages, medians, differences between actuals and normals, and computing trends. But it will not be a substitute for in-depth scientific measurement and model fitting. For that, see the many excellent climate analysts and their peer-reviewed reports, often summarized by the IPCC and other groups.</h5>
+</div>
 </div>
 <div id="plans-potentially-for-new-capabilities" class="section level3">
 <h3>Plans (Potentially) for New Capabilities</h3>

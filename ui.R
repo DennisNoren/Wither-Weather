@@ -5,6 +5,10 @@ library(shinyalert)
 library(here)
 library(dygraphs)
 
+endDate <- today() - 50
+startDate <- as.character(endDate - 600)
+endDate <- as.character(endDate)
+
 # Define UI for application that draws a histogram
 shinyUI(navbarPage("Whither Weather !!",
 
@@ -20,8 +24,9 @@ shinyUI(navbarPage("Whither Weather !!",
         useShinyalert(),
         actionButton("goButton",h5(tags$b("Go")), width = 165), hr(),
         tags$strong(verbatimTextOutput("citiesSelected")), 
-         dateRangeInput("dates", label = h5("Begin/End Date"),
-          start = "2013-05-01", end = "2014-12-31", separator=":"),
+        dateRangeInput("dates", label = h5("Begin/End Date"),
+          start = as.character(startDate),
+          end = as.character(endDate), separator=":"),
         numericInput("searchRadius", "Search Radius (km)",
           value = 25, step = 1, min = 3, max = 50, width = NULL),
         numericInput("limit", "Max stations",
