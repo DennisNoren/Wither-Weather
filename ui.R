@@ -8,8 +8,9 @@ library(dygraphs)
 # Define UI for application that draws a histogram
 shinyUI(navbarPage("Whither Weather !!",
 
-  tabPanel("Cities", # user selects two cities for processing/display
-    title = 'Cities',
+  tabPanel("", # user selects two cities for processing/display
+    title = "Cities",
+    tags$strong(verbatimTextOutput("citiesHelp")),
     tabPanel('Display length', DT::dataTableOutput('ex1'))),
 
   tabPanel("Temperatures",
@@ -17,8 +18,8 @@ shinyUI(navbarPage("Whither Weather !!",
     sidebarLayout(
       sidebarPanel(
         useShinyalert(),
-        actionButton("goButton",h5(tags$b("Go")), width = 165),
-        h5(tags$b(verbatimTextOutput("citiesSelected"))), 
+        actionButton("goButton",h5(tags$b("Go")), width = 165), hr(),
+        tags$strong(verbatimTextOutput("citiesSelected")), 
          dateRangeInput("dates", label = h5("Begin/End Date"),
           start = "2013-05-01", end = "2014-12-31", separator=":"),
         numericInput("searchRadius", "Search Radius (km)",
@@ -34,12 +35,13 @@ shinyUI(navbarPage("Whither Weather !!",
           step = NULL, round = FALSE, sep = ",", pre = "",
           post = "", ticks = TRUE, animate = FALSE, width = NULL),
         actionButton("stopButton",h5(tags$b("Close")),width=165),
-        hr(),
-        htmlOutput("messages", inline = FALSE),
-        textOutput("textInfo2", inline = FALSE),
+#        hr(),
+        # htmlOutput("messages", inline = FALSE),
+        # textOutput("textInfo2", inline = FALSE),
         width=3),
     
       mainPanel(
+        tags$strong(verbatimTextOutput("quickInfo")),     
         dygraphOutput("dyg1"),
         br(),
         dygraphOutput("dyg2")

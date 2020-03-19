@@ -36,6 +36,12 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
   
+  quickText <- paste0("If you have selected two cities, click 'Go' button,",
+    "\n", "or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n",
+    "Each time you change any cities or controls, click 'Go' button again.")
+  output$quickInfo <- renderText(quickText)
+  output$citiesHelp <- renderText("Click to select two cities. Use page navigation and search box if desired. Then click 'Temperatures' tab.")
+  
   observe({
     cit <- input$ex1_rows_selected
     cities <- cities[rev(cit), ] # reversing so latest 2
@@ -43,7 +49,7 @@ shinyServer(function(input, output, session) {
     city2 <- paste0(cities[2,1],", ", cities[2,5])
     cityText <- paste0("Cities Selected:","\n",
                        city1, "\n", city2, "\n")
-    output$citiesSelected = renderText(cityText)
+    output$citiesSelected <- renderText(cityText)
   })
                                                   
     # citySelect returns a DF with the user-selected cities in Cities tab
@@ -281,6 +287,7 @@ shinyServer(function(input, output, session) {
   # temperature plot for top
   output$dyg1 <- renderDygraph({
     if (input$goButton == 0) return()
+    output$quickInfo <- renderText("")
     cityList <- citySelect()
     title <- paste0(cityList[1,1],", ", cityList[1,4])
     gs <- getStations()
