@@ -271,8 +271,8 @@ shinyServer(function(input, output, session) {
       mutate_at(varsMeas, FahrToCels)
   }
   xt1 <- xts(as.matrix(city1[,3:7]), order.by = city1$date)
-  xt1 <- na.approx(xt1)
   xt2 <- xts(as.matrix(city2[,3:7]), order.by = city2$date)
+  xt1 <- na.approx(xt1)
   xt2 <- na.approx(xt2)
   list(xt1, xt2)
 

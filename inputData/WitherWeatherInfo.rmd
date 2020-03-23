@@ -29,10 +29,6 @@ https://github.com/DennisNoren/Wither-Weather
 
 #### As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 9184 stations). In addition, the data about "normal" daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations.
 
-### Getting Initial Plots
-
-#### Then select the Temperature tab at the top, which transfers you to a different display. You can accept all default values and click the ‘Go’ button to see a result, but you will have to wait for the data to appear. This is because there are several API calls to be made to the NOAA website. The response time depends mostly on the length of the range of dates requested.
-
 ### Internal processing Steps  
 
 #### The app does this processing:  
@@ -41,7 +37,9 @@ https://github.com/DennisNoren/Wither-Weather
 
 ##### - For the requested data range, requests/receives temperature data from nearby weather stations. Uses specified maximum search distance to try to find the maximum number of stations within that distance.
 
-##### - Interpolates among weather stations, using an inverse weighted distance algorithm, with order 2. This means that closer cities are weighted much more heavily than further ones.  
+##### - Interpolates spatially among weather stations, using an inverse weighted distance algorithm, with order 2. This means that closer cities are weighted much more heavily than further ones.  
+
+##### - Interpolates temporally within a temperature series to fill in missing temperatures. This performs a linear interpolation, and so a straight line can be an obvious indicator for some instances where there are many consecutive missing values. However if there is one or more missing value at the beginning or end of a requested range of dates, they will remain blank.  
 
 ##### - Accesses the "normal" daily minimum and maximum temperatures for the selected stations. Applies the same interpolation method as used for the daily actuals.  
 
@@ -50,23 +48,6 @@ https://github.com/DennisNoren/Wither-Weather
 ##### - Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,  
 
 ##### - Displays the number of stations used, and if you hover the cursor over this, displays the distances to stations.  
-
-### User Interface Options 
-
-#### You can then interact with the displayed data and make new data requests. The plotted daily values will probably have a very jagged appearance, especially if you have selected multiple years, but you can use controls to change this:  
-
-##### - Use your mouse within a plot to select a particular date, and the exact data values will appear at the top of the plot.   
-
-##### - Drag the cursor across a range of dates in either the top or bottom plot; this will zoom in for both plots, stretching the data horizontally across the plot area. To return to the full data range, double click within either plot.  
-
-##### - Notice the small numeric value displayed on the lower left corner of both plots. To apply a moving average, change this to a higher value and type ‘return’ to activate. This is applied immediately; a value somewhere between 5 and 20 is a reasonable choice, but feel free to experiment.  
-
-##### - On the left panel, you can select and apply different begin and end dates, search radius, maximum number of stations to search for, and a Butterworth high pass filter. To select dates, click on the existing date and interact with the selector; double click on the year After selection, you must select the ‘Go’ button to initiate the request. Then you wait again for the requests to be made and the data to be processed.  
-##### - You might want to select a higher filter frequency than the default, say 12, 13, or 14, which will smooth/generalize more. Moving the frequency below 8 might not be a useful transformation because it will accentuate the day-by-day variations. If you have selected many years of data, the high pass filter might not produce a result – it may be that no daily values are plotted.  
-
-##### - You can continue to try new input parameter combinations on the selected cities, or return to the Cities tab to select new cities.  
-
-##### - Select the ‘Close’ button to close the application.
 
 ### Comments on Use of this App  
 
@@ -80,8 +61,8 @@ https://github.com/DennisNoren/Wither-Weather
 
 #### In order of priority:  
  
-- Add a Map panel to show where all the cities and weather stations are, as well as the zooming in on the selected cities & stations.  
 - Add daily all-time record minimum/maximum temperatures.  
-- Add precipitation as an option.  
+- Add a Map panel to show where all the cities and weather stations are, as well as the zooming in on the selected cities & stations.  
 - Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
-- Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?
+- Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?  
+- Add precipitation as an option.  

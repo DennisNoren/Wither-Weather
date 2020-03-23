@@ -43,9 +43,6 @@ shinyUI(navbarPage("Whither Weather !!",
           step = NULL, round = FALSE, sep = ",", pre = "",
           post = "", ticks = TRUE, animate = FALSE, width = NULL),
         actionButton("stopButton",h5(tags$b("Close")),width=165),
-#        hr(),
-        # htmlOutput("messages", inline = FALSE),
-        # textOutput("textInfo2", inline = FALSE),
         width=3),
     
       mainPanel(
@@ -58,9 +55,7 @@ shinyUI(navbarPage("Whither Weather !!",
         )
       ) # sidebarLayout
     ), # tabPanel
-  tabPanel("Help",
-           htmlOutput("help")),
-  tabPanel("Info",
-           htmlOutput("info"))
+  tabPanel("Help", htmlOutput("help")),
+  tabPanel("Info", htmlOutput("info"))
   ) #navbarPage
 ) #shinyUI
