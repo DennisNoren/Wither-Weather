@@ -128,8 +128,7 @@ shinyServer(function(input, output, session) {
           actual <- meteo_tidy_ghcnd(stationid = staID,
             var=c("TMAX","TMIN"),
             date_min = begDate, date_max = endDate)
-          # actual$tmin <- actual$tmin * 1.8 / 10 + 32
-          # actual$tmax <- actual$tmax * 1.8 / 10 + 32
+
           actual$tmin <- tCelsToFahr(actual$tmin)
           actual$tmax <- tCelsToFahr(actual$tmax)
           actual$tmid <- (actual$tmax + actual$tmin) / 2
@@ -272,7 +271,9 @@ shinyServer(function(input, output, session) {
       mutate_at(varsMeas, FahrToCels)
   }
   xt1 <- xts(as.matrix(city1[,3:7]), order.by = city1$date)
+  xt1 <- na.approx(xt1)
   xt2 <- xts(as.matrix(city2[,3:7]), order.by = city2$date)
+  xt2 <- na.approx(xt2)
   list(xt1, xt2)
 
  })
@@ -308,7 +309,8 @@ shinyServer(function(input, output, session) {
       dyRoller(rollPeriod = 1) %>%
       dySeries(c("MaxNorm","MidNorm","MinNorm"),color="blue",strokeWidth=0)
   })
-  
+
+    # temperature plot for bottom
     output$dyg2 <- renderDygraph({
     if (input$goButton == 0) return()
     cityList <- citySelect()

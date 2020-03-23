@@ -2,12 +2,15 @@
 
 library(shiny)
 library(shinyalert)
+library(lubridate)
 library(here)
+library(shinybusy)
 library(dygraphs)
 
-endDate <- today() - 50
+endDate <- today() - 35
 startDate <- as.character(endDate - 600)
 endDate <- as.character(endDate)
+
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage("Whither Weather !!",
@@ -46,6 +49,8 @@ shinyUI(navbarPage("Whither Weather !!",
         width=3),
     
       mainPanel(
+        add_busy_spinner(spin = "fingerprint", color="#115546",
+          position = "bottom-right", height='300px', width='300px'),
         tags$strong(verbatimTextOutput("quickInfo")),     
         dygraphOutput("dyg1"),
         br(),
