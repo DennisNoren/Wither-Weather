@@ -27,7 +27,7 @@ cities <- readRDS(here::here("inputData", "cities.rds"))
 stations <- readRDS(here::here("inputData", "stations.rds"))
 # preprocessed normals for the station set, over 1 million rows,
 #   which is 365 rows for each station
-cumNormSS <- readRDS(here::here("inputData", "cumNormSS.rds"))
+normals <- readRDS(here::here("inputData", "normals.rds"))
 
 multNA <- function(x, y) { ifelse(is.na(x), NA, x * y)}
 
@@ -157,7 +157,7 @@ shinyServer(function(input, output, session) {
     gs1id <- as.vector(gs1$station)
     gs1LUT <- bind_cols(city = gs1$city, station = gs1$station,
                           invdsq = 1 / (gs1$distance^2))
-    f1 <- filter(cumNormSS, station %in% gs1id)
+    f1 <- filter(normals, station %in% gs1id)
     f1 <- mutate(f1, city = citySeq[1,1], cityNum = 1)
     
     gs2 <- as.data.frame(gs[[1]][2])
@@ -167,7 +167,7 @@ shinyServer(function(input, output, session) {
     gs2id <- as.vector(gs2$station)
     gs2LUT <- bind_cols(city = gs2$city, station = gs2$station,
                           invdsq = 1 / (gs2$distance^2))
-    f2 <- filter(cumNormSS, station %in% gs2id)
+    f2 <- filter(normals, station %in% gs2id)
     f2 <- mutate(f2, city = citySeq[2,1], cityNum = 2)
     
     normals <- bind_rows(f1, f2)

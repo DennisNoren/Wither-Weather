@@ -7,7 +7,7 @@ library(here)
 library(shinybusy)
 library(dygraphs)
 
-endDate <- today() - 35
+endDate <- today() - 40
 startDate <- as.character(endDate - 600)
 endDate <- as.character(endDate)
 
