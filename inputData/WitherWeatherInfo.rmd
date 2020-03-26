@@ -12,14 +12,14 @@ https://www.ncei.noaa.gov/support/access-data-service-api-user-documentation
 #### The set of cities was obtained from the company Simplemaps, using a free option for a basic set of world cities, with a last update of that time as 2015. Their sources are primarily the National Geospatial Intelligence Agency(NGIA), the US Geological Survey, and the US Census Bureau. This basic data set was filtered for U.S. cities in the co-terminus U.S., and further filtered for those cities which have sufficient nearby weather stations.  
 https://simplemaps.com/data/world-cities
 
-#### This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), and there are some suspect data values.
+#### This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), but most missing data has been filled in with linear temporal interpolation. There are slso some suspect data values.
 
 #### The R source code and input files are accessible on github here:  
 https://github.com/DennisNoren/Wither-Weather  
 
 #### The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.  
 
-#### The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA's pre-computed "normal" minimum and maximum temperatures for that day of the year and location.
+#### The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA's pre-computed "normal" minimum and maximum temperatures for that day of the year and location. The app also accesses and displays the all-time record min/max temperatures for that day and city.
 
 ### Data Access
 
@@ -27,7 +27,9 @@ https://github.com/DennisNoren/Wither-Weather
 
 ### Preprocessing
 
-#### As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 9184 stations). In addition, the data about "normal" daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations.
+#### As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 4592 stations). In addition, the data about "normal" daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations. That also includes pre-processing to produce the all-time record temperatures for that city, using the weather station that is closest to the city centroid. So no spatial interpolation is performed on the record temperatures, and the high pass filter option is not applied against these -- it doesn't make sense to do that. However, the moving average option does operate on the record temperature sequences.  
+
+##### The pre-processing of normal temperatures and record temperatures for each station has been done to make the processing time for executing data requests more reasonable.
 
 ### Internal processing Steps  
 
@@ -43,7 +45,9 @@ https://github.com/DennisNoren/Wither-Weather
 
 ##### - Accesses the "normal" daily minimum and maximum temperatures for the selected stations. Applies the same interpolation method as used for the daily actuals.  
 
-##### - Aligns the normals with the actuals.  
+##### - Accesses the all-time record minimum and maximum temperatures by day, but this is for the one closest station to the city centroid (no spatial interpolation).
+
+##### - Aligns the normals and record temperatures with the actuals.  
 
 ##### - Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,  
 
@@ -53,6 +57,8 @@ https://github.com/DennisNoren/Wither-Weather
 
 ##### This app is useful for seeing patterns and variability in temperature data when examined over time spans. The seasonal changes are obvious, but the variability within those may be surprising. One observation is that coastal areas tend to have lower seasonal variation than inland areas, as one would expect. It is easy to notice short term "hot spells" and "cold spells".
 
+##### You will notice some instances where the daily maximum temperature is higher than the record temperature for that date, or the daily minimum temperature is lower than the record temperature for that date. This can occur because the daily temperatures are spatially interpolated, if there is more than one station found with the search radius. This can also occur because the daily temperatures fill in missing values by using temporal interpolation using a simple linear function -- this is applied between the last earlier date with data and the first later date with data. In some cases with a gap of many days, this is visually obvious.
+
 ##### It might be tempting to use this app as evidence for measuring the amount of long-term warming in the U.S. This may be overstepping the scope of the app, for several reasons. First, only some cities & weather stations are represented. It is not necessarily accurate to make statements about the whole co-terminous 48 states based on these. It is natural, and it makes sense, to compare the raw or smoothed actual temperatures with the "normal" range that has been computed by NOAA over many years, but that should be examined in more detail to see if it is a good daily baseline. Climate scientists have developed more robust measures of these things.
 
 ##### However, it can make sense to look at patterns and look for possible trends. Just don't cherry-pick results. At a later time I may add some tools for aggregating temperature averages, medians, differences between actuals and normals, and computing trends. But it will not be a substitute for in-depth scientific measurement and model fitting. For that, see the many excellent climate analysts and their peer-reviewed reports, often summarized by the IPCC and other groups.
@@ -61,8 +67,7 @@ https://github.com/DennisNoren/Wither-Weather
 
 #### In order of priority:  
  
-- Add daily all-time record minimum/maximum temperatures.  
-- Add a Map panel to show where all the cities and weather stations are, as well as the zooming in on the selected cities & stations.  
-- Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
-- Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?  
-- Add precipitation as an option.  
+##### Add a Map panel to show where all the cities and weather stations are, as well as zoom views on the selected cities & stations.  
+##### Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a percentile value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
+##### Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?  
+##### Add precipitation as an option.  

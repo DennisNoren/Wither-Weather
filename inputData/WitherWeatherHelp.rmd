@@ -12,9 +12,10 @@ output: html_document
 
 #### Then select the Temperature tab at the top, which transfers you to a different display. You can accept all default values and click the ‘Go’ button to see a result, but you will have to wait for the data to appear. This is because there are several API calls to be made to the NOAA website. The response time depends mostly on the length of the range of dates requested. The app does this processing:  
 ##### - Grabs the two selected cities,  
-##### - Requests/receives data from nearby weather stations,
+##### - Requests/receives daily min/max data from nearby weather stations,
 ##### - Interpolates spatially among weather stations,  
-##### - Interpolates temporally, in a linear fashion, when there are missing dates in a temperature series. 
+##### - Interpolates temporally, in a linear fashion, when there are missing dates in a temperature series,  
+##### - Accesses all-time record min/max temperatures for the station closest to the city centroid,  
 ##### - Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,  
 ##### - Displays the number of stations used, and if you hover the cursor over this, displays the distances to stations.
 
@@ -23,6 +24,8 @@ output: html_document
 #### You can then interact with the displayed data and make new data requests. The plotted daily values will probably have a very jagged appearance, especially if you have selected multiple years, but you can use controls to change this:  
 ##### - Use your mouse within a plot to select a particular date, and the exact data values will appear at the top of the plot.  
 ##### - Drag the cursor across a range of dates in either the top or bottom plot; this will zoom in for both plots, stretching the data horizontally across the plot area. To return to the full date range, double click within either plot.  
+##### - For the record min/max temperatures, you will normally see that the daily temperatures are some difference from those min/max extremes. Occasionally you will see them coincide. And occasionally you will see, for example, the daily maximum to be higher than the all-time maximum. That may seem like an error, but it is most likely a limitation of the app because of the spatial and/or temporal interpolation. See the Info tab for more explanation.
+##### - There are some cities which will display wildly high or low record max/min temperatures. These are errors in the input data. I plan to clean those up at some time. If it compresses the correct data into a narrow band across the middle of the plot, you can still display it this way: drag the cursor vertically across the compressed data range. It will zoom the data vertically (as it is done horizontally).
 ##### - Notice the small numeric value displayed on the lower left corner of both plots. To apply a moving average, change this to a higher value and type ‘return’ to activate. This is applied immediately; a value somewhere between 5 and 20 is a reasonable choice, but feel free to experiment.  
 ##### - On the left panel, you can select and apply different begin and end dates. To select dates, click on the existing date and interact with the selector; use small arrows to move forward or backward. Click on the month description at top, and it changes to year -- you can then jump forward and backward a year at a time. Click again on the year and it changes to decade. Remember to select a particular day. After selection, you must select the ‘Go’ button to initiate the request. Then you wait again for the requests to be made and the data to be processed.  
 ##### - The left panel also allows you to change the search radius for stations (up to a maximum of 50) and the maximum number of stations (up to a maximum of 10). Each city has one latitude/longitude centroid to represent its location, and the same is true for each weather station. The app gives more weight to the stations that are closer to the city.  

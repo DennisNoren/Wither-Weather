@@ -193,8 +193,8 @@ summary {
 <h4>The set of cities was obtained from the company Simplemaps, using a free option for a basic set of world cities, with a last update of that time as 2015. Their sources are primarily the National Geospatial Intelligence Agency(NGIA), the US Geological Survey, and the US Census Bureau. This basic data set was filtered for U.S. cities in the co-terminus U.S., and further filtered for those cities which have sufficient nearby weather stations.</h4>
 <p><a href="https://simplemaps.com/data/world-cities" class="uri">https://simplemaps.com/data/world-cities</a></p>
 </div>
-<div id="this-app-is-intended-for-general-interest-in-exploring-software-and-data-acquired-through-public-sources.-i-have-carefully-used-industry-standard-methods-for-processing-the-data-but-i-cannot-guarantee-the-accuracy-of-the-results.-i-subscribe-to-the-ideas-of-reproducible-research-and-have-tried-to-employ-those.-the-user-will-notice-missing-data-in-some-places-gaps-in-the-line-charts-and-there-are-some-suspect-data-values." class="section level4">
-<h4>This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), and there are some suspect data values.</h4>
+<div id="this-app-is-intended-for-general-interest-in-exploring-software-and-data-acquired-through-public-sources.-i-have-carefully-used-industry-standard-methods-for-processing-the-data-but-i-cannot-guarantee-the-accuracy-of-the-results.-i-subscribe-to-the-ideas-of-reproducible-research-and-have-tried-to-employ-those.-the-user-will-notice-missing-data-in-some-places-gaps-in-the-line-charts-but-most-missing-data-has-been-filled-in-with-linear-temporal-interpolation.-there-are-slso-some-suspect-data-values." class="section level4">
+<h4>This app is intended for general interest in exploring software and data acquired through public sources. I have carefully used industry-standard methods for processing the data, but I cannot guarantee the accuracy of the results. I subscribe to the ideas of reproducible research and have tried to employ those. The user will notice missing data in some places (gaps in the line charts), but most missing data has been filled in with linear temporal interpolation. There are slso some suspect data values.</h4>
 </div>
 <div id="the-r-source-code-and-input-files-are-accessible-on-github-here" class="section level4">
 <h4>The R source code and input files are accessible on github here:</h4>
@@ -203,8 +203,8 @@ summary {
 <div id="the-data-describe-temperature-precipitation-storms-sea-ice-and-other-phenomena.-the-scope-of-this-data-is-worldwide-but-my-app-focuses-only-on-minimummaximum-daily-temperature-data-for-the-co-terminus-48-united-states-and-the-u.s.-data-is-more-complete-and-has-had-more-thorough-quality-processes-applied.-the-data-have-been-collected-at-a-large-number-of-weather-stations-throughout-the-u.s.-each-with-its-own-beginning-and-end-times-for-collecting-operational-data." class="section level4">
 <h4>The data describe temperature, precipitation, storms, sea ice, and other phenomena. The scope of this data is worldwide, but my app focuses only on minimum/maximum daily temperature data for the co-terminus 48 United States (and the U.S. data is more complete and has had more thorough quality processes applied). The data have been collected at a large number of weather stations throughout the U.S., each with its own beginning and end times for collecting operational data.</h4>
 </div>
-<div id="the-intent-of-this-app-is-to-allow-the-user-to-select-two-cities-from-a-particular-set-of-cities-large-and-medium-size-cities-augmented-by-smaller-cities-to-provide-greater-geographic-coverage.-the-user-also-selects-the-time-range-for-the-data-request.-the-app-obtains-the-nearby-weather-stations-and-interpolates-among-them-to-provide-daily-temperatures-for-the-city-along-with-noaas-pre-computed-normal-minimum-and-maximum-temperatures-for-that-day-of-the-year-and-location." class="section level4">
-<h4>The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA’s pre-computed “normal” minimum and maximum temperatures for that day of the year and location.</h4>
+<div id="the-intent-of-this-app-is-to-allow-the-user-to-select-two-cities-from-a-particular-set-of-cities-large-and-medium-size-cities-augmented-by-smaller-cities-to-provide-greater-geographic-coverage.-the-user-also-selects-the-time-range-for-the-data-request.-the-app-obtains-the-nearby-weather-stations-and-interpolates-among-them-to-provide-daily-temperatures-for-the-city-along-with-noaas-pre-computed-normal-minimum-and-maximum-temperatures-for-that-day-of-the-year-and-location.-the-app-also-accesses-and-displays-the-all-time-record-minmax-temperatures-for-that-day-and-city." class="section level4">
+<h4>The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA’s pre-computed “normal” minimum and maximum temperatures for that day of the year and location. The app also accesses and displays the all-time record min/max temperatures for that day and city.</h4>
 </div>
 </div>
 <div id="data-access" class="section level3">
@@ -215,8 +215,11 @@ summary {
 </div>
 <div id="preprocessing" class="section level3">
 <h3>Preprocessing</h3>
-<div id="as-mentioned-above-the-set-of-cities-was-pre-processed-currently-679-cities.-the-set-of-weather-stations-was-also-preprocessed-to-concentrate-on-only-those-stations-which-are-somewhat-near-at-least-one-of-the-selected-cities-currently-9184-stations.-in-addition-the-data-about-normal-daily-temperatures-was-preprocessed-to-produce-a-file-with-only-those-summaries-for-the-selected-weather-stations." class="section level4">
-<h4>As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 9184 stations). In addition, the data about “normal” daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations.</h4>
+<div id="as-mentioned-above-the-set-of-cities-was-pre-processed-currently-679-cities.-the-set-of-weather-stations-was-also-preprocessed-to-concentrate-on-only-those-stations-which-are-somewhat-near-at-least-one-of-the-selected-cities-currently-4592-stations.-in-addition-the-data-about-normal-daily-temperatures-was-preprocessed-to-produce-a-file-with-only-those-summaries-for-the-selected-weather-stations.-that-also-includes-pre-processing-to-produce-the-all-time-record-temperatures-for-that-city-using-the-weather-station-that-is-closest-to-the-city-centroid.-so-no-spatial-interpolation-is-performed-on-the-record-temperatures-and-the-high-pass-filter-option-is-not-applied-against-these-it-doesnt-make-sense-to-do-that.-however-the-moving-average-option-does-operate-on-the-record-temperature-sequences." class="section level4">
+<h4>As mentioned above, the set of cities was pre-processed (currently 679 cities). The set of weather stations was also preprocessed to concentrate on only those stations which are somewhat near at least one of the selected cities (currently 4592 stations). In addition, the data about “normal” daily temperatures was preprocessed to produce a file with only those summaries for the selected weather stations. That also includes pre-processing to produce the all-time record temperatures for that city, using the weather station that is closest to the city centroid. So no spatial interpolation is performed on the record temperatures, and the high pass filter option is not applied against these – it doesn’t make sense to do that. However, the moving average option does operate on the record temperature sequences.</h4>
+<div id="the-pre-processing-of-normal-temperatures-and-record-temperatures-for-each-station-has-been-done-to-make-the-processing-time-for-executing-data-requests-more-reasonable." class="section level5">
+<h5>The pre-processing of normal temperatures and record temperatures for each station has been done to make the processing time for executing data requests more reasonable.</h5>
+</div>
 </div>
 </div>
 <div id="internal-processing-steps" class="section level3">
@@ -238,8 +241,11 @@ summary {
 <div id="accesses-the-normal-daily-minimum-and-maximum-temperatures-for-the-selected-stations.-applies-the-same-interpolation-method-as-used-for-the-daily-actuals." class="section level5">
 <h5>- Accesses the “normal” daily minimum and maximum temperatures for the selected stations. Applies the same interpolation method as used for the daily actuals.</h5>
 </div>
-<div id="aligns-the-normals-with-the-actuals." class="section level5">
-<h5>- Aligns the normals with the actuals.</h5>
+<div id="accesses-the-all-time-record-minimum-and-maximum-temperatures-by-day-but-this-is-for-the-one-closest-station-to-the-city-centroid-no-spatial-interpolation." class="section level5">
+<h5>- Accesses the all-time record minimum and maximum temperatures by day, but this is for the one closest station to the city centroid (no spatial interpolation).</h5>
+</div>
+<div id="aligns-the-normals-and-record-temperatures-with-the-actuals." class="section level5">
+<h5>- Aligns the normals and record temperatures with the actuals.</h5>
 </div>
 <div id="displays-and-labels-the-data-for-the-two-cities-including-the-normal-range-between-minimum-and-maximum-as-a-light-blue-band" class="section level5">
 <h5>- Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,</h5>
@@ -254,6 +260,9 @@ summary {
 <div id="this-app-is-useful-for-seeing-patterns-and-variability-in-temperature-data-when-examined-over-time-spans.-the-seasonal-changes-are-obvious-but-the-variability-within-those-may-be-surprising.-one-observation-is-that-coastal-areas-tend-to-have-lower-seasonal-variation-than-inland-areas-as-one-would-expect.-it-is-easy-to-notice-short-term-hot-spells-and-cold-spells." class="section level5">
 <h5>This app is useful for seeing patterns and variability in temperature data when examined over time spans. The seasonal changes are obvious, but the variability within those may be surprising. One observation is that coastal areas tend to have lower seasonal variation than inland areas, as one would expect. It is easy to notice short term “hot spells” and “cold spells”.</h5>
 </div>
+<div id="you-will-notice-some-instances-where-the-daily-maximum-temperature-is-higher-than-the-record-temperature-for-that-date-or-the-daily-minimum-temperature-is-lower-than-the-record-temperature-for-that-date.-this-can-occur-because-the-daily-temperatures-are-spatially-interpolated-if-there-is-more-than-one-station-found-with-the-search-radius.-this-can-also-occur-because-the-daily-temperatures-fill-in-missing-values-by-using-temporal-interpolation-using-a-simple-linear-function-this-is-applied-between-the-last-earlier-date-with-data-and-the-first-later-date-with-data.-in-some-cases-with-a-gap-of-many-days-this-is-visually-obvious." class="section level5">
+<h5>You will notice some instances where the daily maximum temperature is higher than the record temperature for that date, or the daily minimum temperature is lower than the record temperature for that date. This can occur because the daily temperatures are spatially interpolated, if there is more than one station found with the search radius. This can also occur because the daily temperatures fill in missing values by using temporal interpolation using a simple linear function – this is applied between the last earlier date with data and the first later date with data. In some cases with a gap of many days, this is visually obvious.</h5>
+</div>
 <div id="it-might-be-tempting-to-use-this-app-as-evidence-for-measuring-the-amount-of-long-term-warming-in-the-u.s.-this-may-be-overstepping-the-scope-of-the-app-for-several-reasons.-first-only-some-cities-weather-stations-are-represented.-it-is-not-necessarily-accurate-to-make-statements-about-the-whole-co-terminous-48-states-based-on-these.-it-is-natural-and-it-makes-sense-to-compare-the-raw-or-smoothed-actual-temperatures-with-the-normal-range-that-has-been-computed-by-noaa-over-many-years-but-that-should-be-examined-in-more-detail-to-see-if-it-is-a-good-daily-baseline.-climate-scientists-have-developed-more-robust-measures-of-these-things." class="section level5">
 <h5>It might be tempting to use this app as evidence for measuring the amount of long-term warming in the U.S. This may be overstepping the scope of the app, for several reasons. First, only some cities &amp; weather stations are represented. It is not necessarily accurate to make statements about the whole co-terminous 48 states based on these. It is natural, and it makes sense, to compare the raw or smoothed actual temperatures with the “normal” range that has been computed by NOAA over many years, but that should be examined in more detail to see if it is a good daily baseline. Climate scientists have developed more robust measures of these things.</h5>
 </div>
@@ -265,17 +274,18 @@ summary {
 <h3>Plans (Potentially) for New Capabilities</h3>
 <div id="in-order-of-priority" class="section level4">
 <h4>In order of priority:</h4>
-<ul>
-<li>Add daily all-time record minimum/maximum temperatures.<br />
-</li>
-<li>Add a Map panel to show where all the cities and weather stations are, as well as the zooming in on the selected cities &amp; stations.<br />
-</li>
-<li>Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.<br />
-</li>
-<li>Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?<br />
-</li>
-<li>Add precipitation as an option.</li>
-</ul>
+<div id="add-a-map-panel-to-show-where-all-the-cities-and-weather-stations-are-as-well-as-zoom-views-on-the-selected-cities-stations." class="section level5">
+<h5>Add a Map panel to show where all the cities and weather stations are, as well as zoom views on the selected cities &amp; stations.</h5>
+</div>
+<div id="add-an-option-to-display-data-as-percentiles-as-opposed-to-raw-data.-in-other-words-the-vertical-dimension-will-run-from-0-to-100-where-0-is-the-lowest-temperature-ever-recorded-for-those-interpolated-weather-stations-and-100-is-the-highest.-if-you-have-a-percentile-value-of-say-72-for-september-15-that-means-that-72-of-the-years-have-had-a-lower-value-than-that-and-28-have-had-a-greater-value.-the-raw-temperature-reading-will-be-available-by-hovering-the-cursor-over-a-data-point." class="section level5">
+<h5>Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a percentile value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.</h5>
+</div>
+<div id="build-capability-to-create-generalized-metrics-for-temperatures-relative-to-normals-to-identify-trends-for-individual-weather-stations-and-aggregating-across-regions.-for-example-what-is-the-median-increasedecrease-of-maximum-temperatures-in-the-midwest-during-spring-early-summer-and-late-summer" class="section level5">
+<h5>Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?</h5>
+</div>
+<div id="add-precipitation-as-an-option." class="section level5">
+<h5>Add precipitation as an option.</h5>
+</div>
 </div>
 </div>
 

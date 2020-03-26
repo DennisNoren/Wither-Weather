@@ -98,7 +98,7 @@ shinyServer(function(input, output, session) {
     nearDF <- nearStations[[1]]
 
     listSta <- list(nearStations, numStations)
-  }) # end getStations
+  }) # end getStations eventReactive function
 
   getActuals <- eventReactive(input$goButton, {
     stationz <- getStations()
@@ -140,7 +140,7 @@ shinyServer(function(input, output, session) {
       } # end station loop
     } # end city loop
     return(actuals)
-  }) # end getActuals reactive function
+  }) # end getActuals eventReactive function
   
   # this interpolates temps among the nearby stations, for each date
   #   using inverse distance weighting, order 2
@@ -170,18 +170,19 @@ shinyServer(function(input, output, session) {
     f2 <- filter(normals, station %in% gs2id)
     f2 <- mutate(f2, city = citySeq[2,1], cityNum = 2)
     
-    normals <- bind_rows(f1, f2)
+    normalz <- bind_rows(f1, f2)
     gsLUT <- bind_rows(gs1LUT, gs2LUT)
-    normals2 <- left_join(normals, gsLUT, by = c("city", "station"))
-    normals2 <- transmute(normals2, city, date, station, invdsq,
+    normalz2 <- left_join(normalz, gsLUT, by = c("city", "station"))
+    normalz2 <- transmute(normalz2, city, date, station, invdsq,
       nMaxWt = NormalMax*invdsq, nMidWt = NormalMidrange*invdsq,
-      nMinWt = NormalMin*invdsq, cityNum)
-    normals2 <- group_by(normals2, city, date) %>%
+      nMinWt = NormalMin*invdsq, cityNum, recordMax, recordMin)
+    normalz2 <- group_by(normalz2, city, date) %>%
       summarise(NormMax = sum(nMaxWt), NormMid = sum(nMidWt),
                 NormMin = sum(nMinWt), denom = sum(invdsq),
-                cityNum = first(cityNum))
-    normals2 <- mutate(.data = normals2, NormalMax = NormMax/denom,
-              NormalMid = NormMid/denom, NormalMin = NormMin/denom,
+                cityNum = first(cityNum), recMax = first(recordMax),
+                recMin = first(recordMin))
+    normalz2 <- mutate(.data = normalz2, normalMax = NormMax/denom,
+              normalMid = NormMid/denom, normalMin = NormMin/denom,
               type = "norm")
     actuals <- mutate(actuals, station = paste0("GHCND:", station),
           city = ifelse(cityNum == 1, citySeq[1,1], citySeq[2,1]))
@@ -190,77 +191,86 @@ shinyServer(function(input, output, session) {
       nMaxWt = multNA(tmax,invdsq), nMidWt = multNA(tmid,invdsq),
       nMinWt = multNA(tmin,invdsq), cityNum)
     actuals2 <- group_by(actuals2, city, date) %>%
-      summarise(NormMax = sum(nMaxWt, na.rm = TRUE),
-                NormMid = sum(nMidWt, na.rm = TRUE),
-                NormMin = sum(nMinWt, na.rm = TRUE),
+      summarise(actMax = sum(nMaxWt, na.rm = TRUE),
+                actMid = sum(nMidWt, na.rm = TRUE),
+                actMin = sum(nMinWt, na.rm = TRUE),
                 denomMax = sum(ifelse(is.na(nMaxWt),0,invdsq)),
                 denomMid = sum(ifelse(is.na(nMidWt),0,invdsq)),
                 denomMin = sum(ifelse(is.na(nMinWt),0,invdsq)),
                 cityNum = first(cityNum))
     actuals2 <- mutate(.data = actuals2,
-      NormalMax = NormMax/denomMax,
-      NormalMid = NormMid/denomMid,
-      NormalMin = NormMin/denomMin,
+      actualMax = actMax/denomMax,
+      actualMid = actMid/denomMid,
+      actualMin = actMin/denomMin,
       type = "actual")
     
-    vars <- c("city", "date", "NormalMax", "NormalMid",
-            "NormalMin", "cityNum", "type")
-    interpolations <- bind_rows(normals2[,vars], actuals2[,vars])
-  })
+    varsAct <- c("city", "date", "actualMax", "actualMid",
+            "actualMin", "cityNum", "type")
+    varsNorm <- c("city", "date", "normalMax", "normalMid",
+          "normalMin", "recMax", "recMin", "cityNum", "type")
+    list(normalz2[, varsNorm], actuals2[, varsAct])
+#    interpolations <- bind_rows(normalz2[,vars], actuals2[,vars])
+  }) # end reactive funtion 'interpolator'
   
   assembler <- reactive({
     # returns a time series with normal min/max/midrange for station(s)
     #  by convention, NOAA uses dates 2010-01-01 through 2010-12-31
-    # also returns time series with actual daily min/max/mid
+    #   for normals retrieval, without leap days, but this app's
+    #   pre-processing interpolated Feb 29.
+    #   for 
+    # function also returns time series with actual daily min/max/mid
     # it merges normals into the actuals for each year
 
     interpolations <- interpolator()
-    normals <- filter(interpolations, type == "norm")
-    normals$month <- month(normals$date)
-    normals$day <- day(normals$date)
-    actuals <- filter(interpolations, type == "actual")
-    actuals$month <- month(actuals$date)
-    actuals$day <- day(actuals$date)
-    LUTvars <- c("city","NormalMax","NormalMid","NormalMin","month","day")
-    normals_LUT <- normals[, LUTvars]
-    actNormal <- left_join(actuals,normals_LUT, by=c("city","month","day"))
+#    normalz <- filter(interpolations, type == "norm")
+    normalz <- interpolations[[1]]
+    normalz$month <- month(normalz$date)
+    normalz$day <- day(normalz$date)
+#    actuals <- filter(interpolations, type == "actual")
+    actualz <- interpolations[[2]]
+    actualz$month <- month(actualz$date)
+    actualz$day <- day(actualz$date)
+    LUTvars <- c("city","normalMax","normalMid","normalMin",
+              "recMax", "recMin", "month","day")
+    normalz_LUT <- normalz[, LUTvars]
+    actNormal <- left_join(actualz, normalz_LUT, 
+                           by=c("city","month","day"))
     names(actNormal) <- c("city", "date", "MaxT", "MidT", "MinT",
-      "cityNum", "type", "month", "day", "MaxNorm", "MidNorm", "MinNorm") 
+      "cityNum", "type", "month", "day",
+      "MaxNorm", "MidNorm", "MinNorm", "RecordMax", "RecordMin") 
     
     cityList <- citySelect()
     city1 <- filter(actNormal, city == cityList[1,1])
     city2 <- filter(actNormal, city == cityList[2,1])
     list(city1, city2)
-  })
+  }) #end reactive function 'assembler'
 
  smoother <- eventReactive(input$goButton, {
   city1 <- assembler()[[1]]
   output$textInfo1 = renderText(as.character(city1[1,]))
   city2 <- assembler()[[2]]
  if (input$smooth == FALSE) # no smoothing applied
-   {city1$MaxTemp <- city1$MaxT
-      city1$MidTemp <- city1$MidT
-      city1$MinTemp <- city1$MinT
-      city2$MaxTemp <- city2$MaxT
-      city2$MidTemp <- city2$MidT
-      city2$MinTemp <- city2$MinT
+   {city1$DailyMax <- city1$MaxT
+      city1$DailyMid <- city1$MidT
+      city1$DailyMin <- city1$MinT
+      city2$DailyMax <- city2$MaxT
+      city2$DailyMid <- city2$MidT
+      city2$DailyMin <- city2$MinT
         }
     else
     {bwf1 <- bwfilter(city1$MaxT, # Butterworth filter
                   freq = input$filtfreq, nfix = 2)
-    city1$MaxTemp <- bwf1$trend
-    bwf1 <- bwfilter(city1$MinT,
-                  freq = input$filtfreq, nfix = 2)
-    city1$MinTemp <- bwf1$trend
-    bwf2 <- bwfilter(city2$MaxT,
-                    freq = input$filtfreq, nfix = 2)
-            city2$MaxTemp <- bwf2$trend
-            bwf2 <- bwfilter(city2$MinT,
-                    freq = input$filtfreq, nfix = 2)
-            city2$MinTemp <- bwf2$trend
-            }  
+      city1$DailyMax <- bwf1$trend
+      bwf1 <- bwfilter(city1$MinT, freq = input$filtfreq, nfix = 2)
+      city1$DailyMin <- bwf1$trend
+      bwf2 <- bwfilter(city2$MaxT, freq = input$filtfreq, nfix = 2)
+      city2$DailyMax <- bwf2$trend
+      bwf2 <- bwfilter(city2$MinT, freq = input$filtfreq, nfix = 2)
+      city2$DailyMin <- bwf2$trend
+    }  
   varsID <- c("city", "date")
-  varsMeas <- c("MaxTemp","MinTemp","MaxNorm","MidNorm","MinNorm")
+  varsMeas <- c("DailyMax","DailyMin","MaxNorm","MidNorm","MinNorm",
+                "RecordMax", "RecordMin")
   vars <- c(varsID, varsMeas)
   city1 <- select(.data = city1, vars)
   city2 <- select(.data = city2, vars)
@@ -270,13 +280,13 @@ shinyServer(function(input, output, session) {
     city2 <- city2 %>%
       mutate_at(varsMeas, FahrToCels)
   }
-  xt1 <- xts(as.matrix(city1[,3:7]), order.by = city1$date)
-  xt2 <- xts(as.matrix(city2[,3:7]), order.by = city2$date)
+  xt1 <- xts(as.matrix(city1[,3:9]), order.by = city1$date)
+  xt2 <- xts(as.matrix(city2[,3:9]), order.by = city2$date)
   xt1 <- na.approx(xt1)
   xt2 <- na.approx(xt2)
   list(xt1, xt2)
 
- })
+ }) # end eventReactive function 'smoother'
   
   # build Cities tab with filter/sort/select capability
   output$ex1 <- DT::renderDataTable(DT::datatable(cities,
@@ -299,12 +309,14 @@ shinyServer(function(input, output, session) {
     dist <- paste(round((data.frame(gs[[1]][1]))[,5],1), collapse=", ")
     dygraph(city1, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
-      dyLegend(width = 500) %>%
-      dyGroup(c("MaxTemp", "MinTemp"),
-        color=c("red", "blue"), strokeWidth=1.5) %>%      
+      dyLegend(width = 600) %>%
+      dyGroup(c("DailyMax", "DailyMin"),
+        color=c("red", "blue"), strokeWidth=1.8) %>%
+      dyGroup("RecordMax", color="orange", strokeWidth=1.5) %>%
+      dyGroup("RecordMin", color="purple", strokeWidth=1.5) %>%
       dyAnnotation(x= meanDate(), text=msg,
-        tooltip = paste("Distances in km =", dist),
-        attachAtBottom=TRUE, width=180, height=22) %>%
+        tooltip = paste("Distances from city centroid, in km =", dist),
+        attachAtBottom=TRUE, width=200, height=22) %>%
       dyOptions(drawGrid = TRUE) %>%
       dyRoller(rollPeriod = 1) %>%
       dySeries(c("MaxNorm","MidNorm","MinNorm"),color="blue",strokeWidth=0)
@@ -321,12 +333,14 @@ shinyServer(function(input, output, session) {
     dist <- paste(round((data.frame(gs[[1]][2]))[,5],1), collapse=", ")
     dygraph(city2, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
-      dyLegend(width = 500) %>%
-      dyGroup(c("MaxTemp","MinTemp"),
-        color=c("red","blue"), strokeWidth=1.5) %>%      
+      dyLegend(width = 600) %>%
+      dyGroup(c("DailyMax","DailyMin"),
+        color=c("red","blue"), strokeWidth=1.8) %>%      
+      dyGroup("RecordMax", color="orange", strokeWidth=1.5) %>%
+      dyGroup("RecordMin", color="purple", strokeWidth=1.5) %>%
       dyAnnotation(x= meanDate(),text=msg,
-        tooltip = paste("Distances in km =", dist),
-        attachAtBottom=TRUE, width=180, height=22) %>%
+        tooltip = paste("Distances from city centroid, in km =", dist),
+        attachAtBottom=TRUE, width=200, height=22) %>%
       dyOptions(drawGrid = TRUE) %>%
       dyRoller(rollPeriod = 1) %>%
       dySeries(c("MaxNorm","MidNorm","MinNorm"),color="blue",strokeWidth=0)

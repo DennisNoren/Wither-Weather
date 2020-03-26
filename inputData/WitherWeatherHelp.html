@@ -196,14 +196,17 @@ summary {
 <div id="grabs-the-two-selected-cities" class="section level5">
 <h5>- Grabs the two selected cities,</h5>
 </div>
-<div id="requestsreceives-data-from-nearby-weather-stations" class="section level5">
-<h5>- Requests/receives data from nearby weather stations,</h5>
+<div id="requestsreceives-daily-minmax-data-from-nearby-weather-stations" class="section level5">
+<h5>- Requests/receives daily min/max data from nearby weather stations,</h5>
 </div>
 <div id="interpolates-spatially-among-weather-stations" class="section level5">
 <h5>- Interpolates spatially among weather stations,</h5>
 </div>
-<div id="interpolates-temporally-in-a-linear-fashion-when-there-are-missing-dates-in-a-temperature-series." class="section level5">
-<h5>- Interpolates temporally, in a linear fashion, when there are missing dates in a temperature series.</h5>
+<div id="interpolates-temporally-in-a-linear-fashion-when-there-are-missing-dates-in-a-temperature-series" class="section level5">
+<h5>- Interpolates temporally, in a linear fashion, when there are missing dates in a temperature series,</h5>
+</div>
+<div id="accesses-all-time-record-minmax-temperatures-for-the-station-closest-to-the-city-centroid" class="section level5">
+<h5>- Accesses all-time record min/max temperatures for the station closest to the city centroid,</h5>
 </div>
 <div id="displays-and-labels-the-data-for-the-two-cities-including-the-normal-range-between-minimum-and-maximum-as-a-light-blue-band" class="section level5">
 <h5>- Displays and labels the data for the two cities, including the “normal” range between minimum and maximum as a light blue band,</h5>
@@ -222,6 +225,12 @@ summary {
 </div>
 <div id="drag-the-cursor-across-a-range-of-dates-in-either-the-top-or-bottom-plot-this-will-zoom-in-for-both-plots-stretching-the-data-horizontally-across-the-plot-area.-to-return-to-the-full-date-range-double-click-within-either-plot." class="section level5">
 <h5>- Drag the cursor across a range of dates in either the top or bottom plot; this will zoom in for both plots, stretching the data horizontally across the plot area. To return to the full date range, double click within either plot.</h5>
+</div>
+<div id="for-the-record-minmax-temperatures-you-will-normally-see-that-the-daily-temperatures-are-some-difference-from-those-minmax-extremes.-occasionally-you-will-see-them-coincide.-and-occasionally-you-will-see-for-example-the-daily-maximum-to-be-higher-than-the-all-time-maximum.-that-may-seem-like-an-error-but-it-is-most-likely-because-of-the-spatial-andor-temporal-interpolation.-see-the-info-tab-for-more-explanation." class="section level5">
+<h5>- For the record min/max temperatures, you will normally see that the daily temperatures are some difference from those min/max extremes. Occasionally you will see them coincide. And occasionally you will see, for example, the daily maximum to be higher than the all-time maximum. That may seem like an error, but it is most likely because of the spatial and/or temporal interpolation. See the Info tab for more explanation.</h5>
+</div>
+<div id="there-are-some-cities-which-will-display-wildly-high-or-low-record-maxmin-temperatures.-these-are-errors-in-the-input-data.-i-plan-to-clean-those-up-at-some-time.-if-it-compresses-the-correct-data-into-a-narrow-band-across-the-middle-of-the-plot-you-can-still-display-it-this-way-drag-the-cursor-vertically-across-the-compressed-data-range.-it-will-zoom-the-data-vertically-as-it-is-done-horizontally." class="section level5">
+<h5>- There are some cities which will display wildly high or low record max/min temperatures. These are errors in the input data. I plan to clean those up at some time. If it compresses the correct data into a narrow band across the middle of the plot, you can still display it this way: drag the cursor vertically across the compressed data range. It will zoom the data vertically (as it is done horizontally).</h5>
 </div>
 <div id="notice-the-small-numeric-value-displayed-on-the-lower-left-corner-of-both-plots.-to-apply-a-moving-average-change-this-to-a-higher-value-and-type-return-to-activate.-this-is-applied-immediately-a-value-somewhere-between-5-and-20-is-a-reasonable-choice-but-feel-free-to-experiment." class="section level5">
 <h5>- Notice the small numeric value displayed on the lower left corner of both plots. To apply a moving average, change this to a higher value and type ‘return’ to activate. This is applied immediately; a value somewhere between 5 and 20 is a reasonable choice, but feel free to experiment.</h5>
