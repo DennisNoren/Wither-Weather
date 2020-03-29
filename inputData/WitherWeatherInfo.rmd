@@ -21,6 +21,13 @@ https://github.com/DennisNoren/Wither-Weather
 
 #### The intent of this app is to allow the user to select two cities from a particular set of cities (large and medium size cities augmented by smaller cities to provide greater geographic coverage). The user also selects the time range for the data request. The app obtains the nearby weather stations and interpolates among them to provide daily temperatures for the city, along with NOAA's pre-computed "normal" minimum and maximum temperatures for that day of the year and location. The app also accesses and displays the all-time record min/max temperatures for that day and city.
 
+#### NOTE: Bug fixed on 3/29/20. This affected the daily record min-max values only. The software was previously grabbing the wrong station in many cases, the one whose station ID is alphabetically before the others close to that city, rather than the one that is closest in distance.
+
+##### NOTE: TBS bug fix. There are many weather stations whose daily record min-max have incorrect values, sometimes wildly wrong. These are errors in the source data, but the data needs to be cleaned. The plan is to do this as furhter pre-processing the file that contains these data. This pre-processing will, for each weather station, compute a moving average for the record daily maximum and a moving standard deviation for the record daily maximum. Then it will determine if the reported value is higher than the moving average by more than k std deviations, k to be determined by experimentation. The original reported value will be replaced by the moving average in those cases. The same process will be used for reported values that are far less than the moving average, and further compare it against the "normals" daily maximum. The value of k may be different for this.
+
+##### The same process will be done with the daily minimum values. Again, the k values may be different. The experimentation will include looking at nearby weather stations to see if they have a similar extreme value. If they do, it may be an indicator that this was a legitimate extreme temperature event, and should not be changed. The goal is to have one process to auto-correct these values rather than go look at them individually; after all, there are nearly 4600 weather stations.
+
+
 ### Data Access
 
 #### In order to use NOAA's API, one needs to request and use a free API access token, or "key". Then HTTP protocols are available for accessing the published datasets. These methods are awkward and involved, but fortunately a convenient R package has been developed to take most of the pain out of this process. The key used in this app is my personal key, but it is stored in a file that is not visible to the user.

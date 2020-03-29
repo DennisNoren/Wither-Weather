@@ -37,7 +37,7 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 shinyServer(function(input, output, session) {
   
   quickText <- paste0("If you have selected two cities, click 'Go' button,",
-    "\n", " or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n",
+    "\n", " or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n","Results: Line charts for daily temperature min-max and daily record min-max", "\n", " along with the range between normal min and max as broad blue band.", "\n",
     "Each time you change any cities or controls, click 'Go' button again.", "\n","For more detail, look at Help tab.")
   output$quickInfo <- renderText(quickText)
   output$citiesHelp <- renderText("Click to select two cities. Use page navigation and search box if desired. Then click 'Temperatures' tab.")
@@ -156,7 +156,7 @@ shinyServer(function(input, output, session) {
                     "distance", "city", "type")
     gs1id <- as.vector(gs1$station)
     gs1LUT <- bind_cols(city = gs1$city, station = gs1$station,
-                          invdsq = 1 / (gs1$distance^2))
+      distance = gs1$distance, invdsq = 1 / (gs1$distance^2))
     f1 <- filter(normals, station %in% gs1id)
     f1 <- mutate(f1, city = citySeq[1,1], cityNum = 1)
     
@@ -166,13 +166,15 @@ shinyServer(function(input, output, session) {
                     "distance", "city", "type")
     gs2id <- as.vector(gs2$station)
     gs2LUT <- bind_cols(city = gs2$city, station = gs2$station,
-                          invdsq = 1 / (gs2$distance^2))
+      distance = gs2$distance, invdsq = 1 / (gs2$distance^2))
     f2 <- filter(normals, station %in% gs2id)
     f2 <- mutate(f2, city = citySeq[2,1], cityNum = 2)
     
     normalz <- bind_rows(f1, f2)
+
     gsLUT <- bind_rows(gs1LUT, gs2LUT)
     normalz2 <- left_join(normalz, gsLUT, by = c("city", "station"))
+    normalz2 <- arrange(normalz2, city, distance, date)
     normalz2 <- transmute(normalz2, city, date, station, invdsq,
       nMaxWt = NormalMax*invdsq, nMidWt = NormalMidrange*invdsq,
       nMinWt = NormalMin*invdsq, cityNum, recordMax, recordMin)
