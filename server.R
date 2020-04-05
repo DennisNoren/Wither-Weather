@@ -11,6 +11,12 @@ library(xts)
 library(stringr)
 library(mFilter)
 library(shinyalert)
+library(leaflet)
+#library(maps)
+library(sp)
+#library(maptools)
+#library(rgdal)
+library(ggmap)
 
 readRenviron(file.path("~", ".Renviron"))
 #print(Sys.getenv("noaakey"))
@@ -100,6 +106,55 @@ shinyServer(function(input, output, session) {
     listSta <- list(nearStations, numStations)
   }) # end getStations eventReactive function
 
+  output$thismap <- renderLeaflet({
+    km1 <- 1000; km25 <- 25000; km50 <- 50000; km200 <- 200000
+    opaq <- 1.0; trluc <- 0.7
+    clr25 <- "cyan"; clr50 <- "cyan"; clr200 <- "yellow"
+
+    us_states <- map_data("state") # map_data in package ggmap    
+#    https://stackoverflow.com/questions/45237646/r-leaflet-addpolygons-by-group
+    # above link gave solution below
+    split_data_poly = lapply(unique(us_states$group), function(x) {
+      df = as.matrix(us_states[us_states$group == x, c("long", "lat")])
+      polys = Polygons(list(Polygon(df)), ID = x)
+      return(polys)
+    })
+    
+    data_polys = SpatialPolygons(split_data_poly)
+    
+    cityPair <- citySelect()     
+    leaflet(data_polys) %>%
+      setView(lng = -101, lat = 40, zoom=4) %>%
+      addProviderTiles("Esri.WorldShadedRelief") %>%
+      addPopups(cityPair$longitude[1:2],
+          cityPair$latitude[1:2], cityPair$id[1:2],
+          options = popupOptions(closeButton = TRUE)) %>%
+      addCircles(lng = stations$longitude, lat = stations$latitude,
+        opacity = opaq, radius=km1, color="white", weight=2, fill=FALSE) %>%
+      addCircles(data=cities, lng=cities$longitude, lat=cities$latitude,
+        opacity = trluc, radius=3, color="red", weight=7, label = cities$id) %>%
+      addLabelOnlyMarkers(lng = cityPair$longitude, lat= cityPair$latitude,
+        label = cityPair$id, markerOptions(interactive=TRUE, permanent = TRUE,
+        noHide = FALSE, textOnly = TRUE)) %>%
+      
+      addCircles(lng = cityPair$longitude[1], lat=cityPair$latitude[1],
+        weight= 3, color = clr25, radius = km25, opacity = trluc, fill = FALSE) %>%
+      addCircles(lng = cityPair$longitude[1], lat=cityPair$latitude[1],
+        weight= 3, color = clr50, radius = km50, opacity = opaq, fill = FALSE) %>%
+      addCircles(lng = cityPair$longitude[1], lat=cityPair$latitude[1],
+        weight= 3, color = clr200, radius = km200, opacity = opaq, fill = FALSE) %>%
+
+      addCircles(lng = cityPair$longitude[2], lat=cityPair$latitude[2],
+        weight= 3, color = clr25, radius = km25, opacity = trluc, fill = FALSE) %>%
+      addCircles(lng = cityPair$longitude[2], lat=cityPair$latitude[2],
+        weight= 3, color = clr50, radius = km50, opacity = opaq, fill = FALSE) %>%
+      addCircles(lng = cityPair$longitude[2], lat=cityPair$latitude[2],
+        weight= 3, color = clr200, radius = km200, opacity = opaq, fill = FALSE) %>%
+      
+      addPolygons(weight = 1, opacity = 0.8, color = "black")
+    
+    })
+  
   getActuals <- eventReactive(input$goButton, {
     stationz <- getStations()
     dateRange <- seq.Date(from = input$dates[1],

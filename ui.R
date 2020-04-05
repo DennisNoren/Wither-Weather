@@ -55,6 +55,10 @@ shinyUI(navbarPage("Whither Weather !!",
         )
       ) # sidebarLayout
     ), # tabPanel
+  tabPanel("Map", leafletOutput("thismap"),
+           p(),
+           actionButton("recalc", "Reload"),
+           width = "100%", height = "100%"),
   tabPanel("Help", htmlOutput("help")),
   tabPanel("Info", htmlOutput("info"))
   ) #navbarPage
