@@ -12,7 +12,8 @@ output: html_document
 
 #### Then select the Temperature tab at the top, which transfers you to a different display. You can accept all default values and click the ‘Go’ button to see a result, but you will have to wait for the data to appear. This is because there are several API calls to be made to the NOAA website. The response time depends mostly on the length of the range of dates requested. The app does this processing:  
 ##### - Grabs the two selected cities,  
-##### - Requests/receives daily min/max data from nearby weather stations,
+##### - Displays locations of selected cities, other cities, and all weather stations,  
+##### - Requests/receives daily min/max data from nearby weather stations,  
 ##### - Interpolates spatially among weather stations,  
 ##### - Interpolates temporally, in a linear fashion, when there are missing dates in a temperature series,  
 ##### - Accesses all-time record min/max temperatures for the station closest to the city centroid,  

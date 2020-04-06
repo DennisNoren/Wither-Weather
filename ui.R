@@ -3,6 +3,7 @@
 library(shiny)
 library(shinyalert)
 library(lubridate)
+library(leaflet)
 library(here)
 library(shinybusy)
 library(dygraphs)
@@ -56,9 +57,11 @@ shinyUI(navbarPage("Whither Weather !!",
       ) # sidebarLayout
     ), # tabPanel
   tabPanel("Map", leafletOutput("thismap"),
-           p(),
-           actionButton("recalc", "Reload"),
-           width = "100%", height = "100%"),
+           tags$strong(verbatimTextOutput("mapInfo")),     
+  ),
+#           p()),
+#           actionButton("recalc", "Reload"),
+
   tabPanel("Help", htmlOutput("help")),
   tabPanel("Info", htmlOutput("info"))
   ) #navbarPage

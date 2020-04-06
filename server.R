@@ -12,20 +12,18 @@ library(stringr)
 library(mFilter)
 library(shinyalert)
 library(leaflet)
-#library(maps)
 library(sp)
-#library(maptools)
-#library(rgdal)
 library(ggmap)
 
-readRenviron(file.path("~", ".Renviron"))
-#print(Sys.getenv("noaakey"))
+
 # Note: need NOAA API key.
 # https://www.ncdc.noaa.gov/cdo-web/webservices/v2
 # Placing it in .RProfile works well for individual use, as such:
 # options(noaakey = "thekeywithabout32characters")
 # Placing it in .Renviron works well for shinyapps.io, as such:
 # noaakey = "thekeywithabout32characters"
+readRenviron(file.path("~", ".Renviron"))
+# print(Sys.getenv("noaakey"))
 
 # 679 cities, all from CONUS
 cities <- readRDS(here::here("inputData", "cities.rds"))
@@ -33,6 +31,8 @@ cities <- readRDS(here::here("inputData", "cities.rds"))
 stations <- readRDS(here::here("inputData", "stations.rds"))
 # preprocessed normals for the station set, over 1 million rows,
 #   which is 365 rows for each station
+stations$label <- paste0(stations$name," (", stations$first_year, " - ",
+                         stations$last_year, ")")
 normals <- readRDS(here::here("inputData", "normals.rds"))
 
 multNA <- function(x, y) { ifelse(is.na(x), NA, x * y)}
@@ -42,11 +42,23 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
   
-  quickText <- paste0("If you have selected two cities, click 'Go' button,",
-    "\n", " or you may first change any of the input controls on the left.", "\n", "There may be a 30 second or more delay to see results.", "\n","Results: Line charts for daily temperature min-max and daily record min-max", "\n", " along with the range between normal min and max as broad blue band.", "\n",
-    "Each time you change any cities or controls, click 'Go' button again.", "\n","For more detail, look at Help tab.")
-  output$quickInfo <- renderText(quickText)
+  mapText <- paste0("Red markers are cities,","\n", 
+    " and white markers are weather stations.", "\n",
+    "Use zoom controls, and pan with mouse.", "\n",
+    "Hover cursor on city to see its name.", "\n",
+    "Cyan circles are 25 km and 50 km from selected cities.", "\n",
+    "Yellow circles are 200 km from selected cities.")
+  output$mapInfo <- renderText(mapText)
   output$citiesHelp <- renderText("Click to select two cities. Use page navigation and search box if desired. Then click 'Temperatures' tab.")
+  quickText <- paste0("If you have selected two cities, click 'Go' button,","\n", 
+    " or you may first change any of the input controls on the left,", "\n",
+    " or look at the Map tab to see locations.", "\n",
+    "There may be a 30 second or more delay to see temperature results.", "\n",
+    "Results: Line charts for daily temperature min-max and daily record min-max", "\n",
+    " along with the range between normal min and max as broad blue band.", "\n",
+    "Each time you change any cities or controls, click 'Go' button again.", "\n",
+    "For more detail, look at Help tab.")
+  output$quickInfo <- renderText(quickText)
   
   observe({
     cit <- input$ex1_rows_selected
@@ -59,7 +71,7 @@ shinyServer(function(input, output, session) {
   })
                                                   
     # citySelect returns a DF with the user-selected cities in Cities tab
-  citySelect <-  eventReactive(input$goButton, {
+  citySelect <-  reactive( {
     cit <- input$ex1_rows_selected
     cities <- cities[rev(cit), ] # reversing so latest 2 selected are at top
     cities
@@ -107,7 +119,7 @@ shinyServer(function(input, output, session) {
   }) # end getStations eventReactive function
 
   output$thismap <- renderLeaflet({
-    km1 <- 1000; km25 <- 25000; km50 <- 50000; km200 <- 200000
+    km3 <- 3000; km25 <- 25000; km50 <- 50000; km200 <- 200000
     opaq <- 1.0; trluc <- 0.7
     clr25 <- "cyan"; clr50 <- "cyan"; clr200 <- "yellow"
 
@@ -122,20 +134,24 @@ shinyServer(function(input, output, session) {
     
     data_polys = SpatialPolygons(split_data_poly)
     
-    cityPair <- citySelect()     
+    cityPair <- citySelect()
     leaflet(data_polys) %>%
       setView(lng = -101, lat = 40, zoom=4) %>%
-      addProviderTiles("Esri.WorldShadedRelief") %>%
+      addProviderTiles("Esri.WorldShadedRelief", 
+        providerTileOptions(noWrap = TRUE, updateWhenIdle = FALSE)) %>%
       addPopups(cityPair$longitude[1:2],
           cityPair$latitude[1:2], cityPair$id[1:2],
           options = popupOptions(closeButton = TRUE)) %>%
       addCircles(lng = stations$longitude, lat = stations$latitude,
-        opacity = opaq, radius=km1, color="white", weight=2, fill=FALSE) %>%
+        opacity = opaq, radius=km3, color="white", weight=2, fill=FALSE) %>%
       addCircles(data=cities, lng=cities$longitude, lat=cities$latitude,
-        opacity = trluc, radius=3, color="red", weight=7, label = cities$id) %>%
+        opacity = trluc, radius=km3, color="red", weight=7, label = cities$id) %>%
       addLabelOnlyMarkers(lng = cityPair$longitude, lat= cityPair$latitude,
         label = cityPair$id, markerOptions(interactive=TRUE, permanent = TRUE,
-        noHide = FALSE, textOnly = TRUE)) %>%
+        noHide = TRUE, textOnly = TRUE)) %>%
+      # addLabelOnlyMarkers(lng = stations$longitude, lat= stations$latitude,
+      #   label = stations$label,
+      #   markerOptions(interactive=FALSE, permanent=FALSE, noHide=TRUE, textOnly=TRUE)) %>%
       
       addCircles(lng = cityPair$longitude[1], lat=cityPair$latitude[1],
         weight= 3, color = clr25, radius = km25, opacity = trluc, fill = FALSE) %>%
@@ -151,9 +167,11 @@ shinyServer(function(input, output, session) {
       addCircles(lng = cityPair$longitude[2], lat=cityPair$latitude[2],
         weight= 3, color = clr200, radius = km200, opacity = opaq, fill = FALSE) %>%
       
-      addPolygons(weight = 1, opacity = 0.8, color = "black")
+ #     addLegend(map = data_polys, position = "bottomleft", title = "legend") %>%
+      addPolygons(weight = 1, opacity = 0.8, color = "black", fill = FALSE)
     
     })
+
   
   getActuals <- eventReactive(input$goButton, {
     stationz <- getStations()
@@ -302,7 +320,7 @@ shinyServer(function(input, output, session) {
     list(city1, city2)
   }) #end reactive function 'assembler'
 
- smoother <- eventReactive(input$goButton, {
+  smoother <- eventReactive(input$goButton, {
   city1 <- assembler()[[1]]
   output$textInfo1 = renderText(as.character(city1[1,]))
   city2 <- assembler()[[2]]

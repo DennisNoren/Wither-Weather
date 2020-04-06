@@ -44,6 +44,8 @@ https://github.com/DennisNoren/Wither-Weather
 
 ##### - Grabs the two selected cities,  
 
+##### - Displays the selected cities on a map. Allows user to view locations/names of other cities in dataset and locations of all weather stations in dataset.
+
 ##### - For the requested data range, requests/receives temperature data from nearby weather stations. Uses specified maximum search distance to try to find the maximum number of stations within that distance.
 
 ##### - Interpolates spatially among weather stations, using an inverse weighted distance algorithm, with order 2. This means that closer cities are weighted much more heavily than further ones.  
@@ -74,7 +76,6 @@ https://github.com/DennisNoren/Wither-Weather
 
 #### In order of priority:  
  
-##### Add a Map panel to show where all the cities and weather stations are, as well as zoom views on the selected cities & stations.  
 ##### Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a percentile value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
 ##### Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?  
 ##### Add precipitation as an option.  
