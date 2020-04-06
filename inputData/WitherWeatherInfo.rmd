@@ -72,10 +72,20 @@ https://github.com/DennisNoren/Wither-Weather
 
 ##### However, it can make sense to look at patterns and look for possible trends. Just don't cherry-pick results. At a later time I may add some tools for aggregating temperature averages, medians, differences between actuals and normals, and computing trends. But it will not be a substitute for in-depth scientific measurement and model fitting. For that, see the many excellent climate analysts and their peer-reviewed reports, often summarized by the IPCC and other groups.
 
-### Plans (Potentially) for New Capabilities
+### Plans (Potentially) for Bug Fixes and New Capabilities
 
 #### In order of priority:  
- 
+
+#### Fix alignment problem between shaded relief background and state boundaries. This is probably related to map projection.  
+#### Change to a different map projection that is equal area.  
+#### Fix obvious bad data values for daily min-max records (mentioned above).  
+#### Add option to turn off all-time record daily min-max lines.  
+#### Add animation option to cycle through range of moving average parameters.  
+#### When actual temperatures are displayed, the missing values are auto-filled by linear  interpolation, but no extrapolation is done at the edges. Fix this by auto-adjusting the begin and/or end dates so there are no missing values at the edges. This will also allow the high pass filter to work correctly (except those times it doesn't).  
+#### Look for a solution for those times the high pass filter fails.  
+#### Add capability for user to click on an ad-hoc location on the map view, and have that be the basis for finding temperatures, rather than one of the defined cities.   
+#### Add capability to see which year(s) the all-time records occurred, by dwelling cursor on data point.  
+#### Display the range of years data has been collected at the weather stations used for the particular display.  
 ##### Add an option to display data as percentiles as opposed to raw data. In other words, the vertical dimension will run from 0 to 100, where 0 is the lowest temperature ever recorded for those interpolated weather stations, and 100 is the highest. If you have a percentile value of, say, 72 for September 15, that means that 72% of the years have had a lower value than that, and 28% have had a greater value. The raw temperature reading will be available by hovering the cursor over a data point.  
 ##### Build capability to create generalized metrics for temperatures relative to normals, to identify trends, for individual weather stations and aggregating across regions. For example, what is the median increase/decrease of maximum temperatures in the Midwest during spring, early summer, and late summer?  
 ##### Add precipitation as an option.  

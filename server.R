@@ -42,8 +42,8 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
   
-  mapText <- paste0("Red markers are cities,","\n", 
-    " and white markers are weather stations.", "\n",
+  mapText <- paste0("Red markers are city centroids.","\n", 
+    "White markers are weather stations.", "\n",
     "Use zoom controls, and pan with mouse.", "\n",
     "Hover cursor on city to see its name.", "\n",
     "Cyan circles are 25 km and 50 km from selected cities.", "\n",
@@ -139,19 +139,30 @@ shinyServer(function(input, output, session) {
       setView(lng = -101, lat = 40, zoom=4) %>%
       addProviderTiles("Esri.WorldShadedRelief", 
         providerTileOptions(noWrap = TRUE, updateWhenIdle = FALSE)) %>%
-      addPopups(cityPair$longitude[1:2],
-          cityPair$latitude[1:2], cityPair$id[1:2],
-          options = popupOptions(closeButton = TRUE)) %>%
+      addCircles(lng = cityPair$longitude, lat= cityPair$latitude, 
+        label = cityPair$id,
+        labelOptions = labelOptions(noHide = T, textsize="17px")) %>%
       addCircles(lng = stations$longitude, lat = stations$latitude,
         opacity = opaq, radius=km3, color="white", weight=2, fill=FALSE) %>%
-      addCircles(data=cities, lng=cities$longitude, lat=cities$latitude,
-        opacity = trluc, radius=km3, color="red", weight=7, label = cities$id) %>%
-      addLabelOnlyMarkers(lng = cityPair$longitude, lat= cityPair$latitude,
-        label = cityPair$id, markerOptions(interactive=TRUE, permanent = TRUE,
-        noHide = TRUE, textOnly = TRUE)) %>%
-      # addLabelOnlyMarkers(lng = stations$longitude, lat= stations$latitude,
-      #   label = stations$label,
-      #   markerOptions(interactive=FALSE, permanent=FALSE, noHide=TRUE, textOnly=TRUE)) %>%
+      addCircles(lng=cities$longitude, lat=cities$latitude,
+        label= cities$id, weight = 0, radius = km3, opacity = 0, color="white",
+        labelOptions = labelOptions(noHide = F, textsize = "17px")) %>%
+      addCircles(lng=cities$longitude, lat=cities$latitude,
+        opacity = trluc, radius=km3, color="red", weight=3, fill= FALSE) %>%
+      # addLabelOnlyMarkers(lng = cities$longitude, lat= cities$latitude,
+      #   label = cities$id, markerOptions(interactive=TRUE, permanent = FALSE,
+      #         noHide = TRUE, textOnly = FALSE),
+      #         labelOptions = labelOptions(noHide= F, textsize = "15px",
+      #                                              direction = "bottom")) %>%
+      # labelOptions = labelOptions(noHide= F, direction = "bottom",
+        #   style = list(
+        #     "color" = "black",
+        #     "font-family" = "serif",
+        #     "font-style" = "bold",
+        #     "box-shadow" = "3px 3px rgba(0,0,0,0.25)",
+        #     "font-size" = "20px",
+        #     "border-color" = "rgba(0,0,0,0.5)"
+        #   )
       
       addCircles(lng = cityPair$longitude[1], lat=cityPair$latitude[1],
         weight= 3, color = clr25, radius = km25, opacity = trluc, fill = FALSE) %>%
@@ -384,7 +395,7 @@ shinyServer(function(input, output, session) {
     dist <- paste(round((data.frame(gs[[1]][1]))[,5],1), collapse=", ")
     dygraph(city1, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
-      dyLegend(width = 600) %>%
+      dyLegend(width = 700) %>%
       dyGroup(c("DailyMax", "DailyMin"),
         color=c("red", "blue"), strokeWidth=1.8) %>%
       dyGroup("RecordMax", color="orange", strokeWidth=1.5) %>%
@@ -408,7 +419,7 @@ shinyServer(function(input, output, session) {
     dist <- paste(round((data.frame(gs[[1]][2]))[,5],1), collapse=", ")
     dygraph(city2, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
-      dyLegend(width = 600) %>%
+      dyLegend(width = 700) %>%
       dyGroup(c("DailyMax","DailyMin"),
         color=c("red","blue"), strokeWidth=1.8) %>%      
       dyGroup("RecordMax", color="orange", strokeWidth=1.5) %>%
