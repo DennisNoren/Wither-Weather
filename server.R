@@ -43,8 +43,8 @@ FahrToCels <- function(fahr) {(fahr-32) / 1.8}
 
 shinyServer(function(input, output, session) {
   
-  mapText <- paste0("Red markers are city centroids.","\n", 
-    "White markers are weather stations.", "\n",
+  mapText <- paste0("Red markers are city centroids from dataset.","\n", 
+    "Purple markers are weather stations from dataset.", "\n",
     "Use zoom controls, and pan with mouse.", "\n",
     "Hover cursor on city to see its name.", "\n",
     "Cyan circles are 25 km and 50 km from selected cities.", "\n",
@@ -79,10 +79,8 @@ shinyServer(function(input, output, session) {
    
   })
 
-
   meanDate <- eventReactive(input$goButton, {
-    as.character(mean(c(input$dates[1], input$dates[2])))
-                                    })
+    as.character(mean(c(input$dates[1], input$dates[2])))})
 
   # getStations returns a list of DFs, each with up to k stations,
   #   where k is the maximum number to return.
@@ -120,7 +118,7 @@ shinyServer(function(input, output, session) {
   }) # end getStations eventReactive function
 
   output$thismap <- renderLeaflet({
-    km3 <- 3000; km10 <- 10000; km25 <- 25000; km50 <- 50000; km200 <- 200000
+    km3 <-3000; km5 <-5000; km10 <-10000; km25 <-25000; km50 <-50000; km200 <-200000
     opaq <- 1.0; trluc <- 0.7
     clr25 <- "cyan"; clr50 <- "cyan"; clr200 <- "yellow"
 
@@ -136,19 +134,25 @@ shinyServer(function(input, output, session) {
     data_polys = SpatialPolygons(split_data_poly)
 
     cityPair <- citySelect()
+    if (nrow(cityPair) < 2) {
+      shinyalert(title = "Must select two cities. Return to Cities tab",
+                 type = "error", closeOnClickOutside = TRUE)}
+    baseMap <- switch(input$mapSelect,
+        "1" = "Esri.NatGeoWorldMap",
+        "2" = "Esri.WorldTopoMap",
+        "3" = "Esri.WorldImagery",
+        "4" = "Esri.WorldShadedRelief")
     leaflet(data_polys) %>%
       setView(lng = -101, lat = 40, zoom=4) %>%
-      addProviderTiles("Esri.WorldShadedRelief",
-#      addProviderTiles("Stamen.TerrainBackground",
-#      addProviderTiles("OpenMapSurfer.Hillshade",
+      addProviderTiles(baseMap,
         providerTileOptions(noWrap = TRUE, updateWhenIdle = FALSE)) %>%
       addCircles(lng = cityPair$longitude, lat= cityPair$latitude,
         label = cityPair$id,
         labelOptions = labelOptions(noHide = T, textsize="17px")) %>%
       addCircles(lng = stations$longitude, lat = stations$latitude,
-        opacity = opaq, radius=km3, color="white", weight=2, fill=FALSE) %>%
+        opacity = opaq, radius=km3, color="purple", weight=2, fill=FALSE) %>%
       addCircles(lng=cities$longitude, lat=cities$latitude,
-        label= cities$id, weight = 0, radius = km10, opacity = 0, color="white",
+        label= cities$id, weight = 0, radius = km5, opacity = 0, color="white",
         labelOptions = labelOptions(noHide = F, textsize = "17px")) %>%
       addCircles(lng=cities$longitude, lat=cities$latitude,
         opacity = trluc, radius=km3, color="red", weight=3, fill= FALSE) %>%

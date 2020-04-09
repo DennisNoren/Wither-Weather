@@ -56,10 +56,16 @@ shinyUI(navbarPage("Whither Weather !!",
         )
       ) # sidebarLayout
     ), # tabPanel
-  tabPanel("Map", leafletOutput("thismap"),
-           tags$strong(verbatimTextOutput("mapInfo")),     
-  ),
-#           p()),
+  tabPanel("Map",
+          leafletOutput("thismap"), p(),
+          tags$strong(verbatimTextOutput("mapInfo")), p(),
+          radioButtons("mapSelect", "Base Map",
+              c("ESRI National Geographic" = "1",
+                  "ESRI Topography" = "2",
+                  "ESRI Mosaiced Imagery" = "3",
+                  "ESRI Shaded Relief" = "4")
+            )
+          ),
 #           actionButton("recalc", "Reload"),
 
   tabPanel("Help", htmlOutput("help")),
