@@ -76,9 +76,15 @@ shinyServer(function(input, output, session) {
     cit <- input$ex1_rows_selected
     cities <- cities[rev(cit), ] # reversing so latest 2 selected are at top
     cities
-   
   })
 
+  # citySelectGo for getting city name in title only when temps reprocessed
+  citySelectGo <-  eventReactive(input$goButton, {
+    cit <- input$ex1_rows_selected
+    cities <- cities[rev(cit), ] # reversing so latest 2 selected are at top
+    cities
+  })
+  
   meanDate <- eventReactive(input$goButton, {
     as.character(mean(c(input$dates[1], input$dates[2])))})
 
@@ -172,10 +178,8 @@ shinyServer(function(input, output, session) {
         weight= 3, color = clr200, radius = km200, opacity = opaq, fill = FALSE) %>%
 
       addPolygons(weight = 1, opacity = 0.8, color = "black", fill = FALSE)
-
     })
 
-  
   getActuals <- eventReactive(input$goButton, {
     stationz <- getStations()
     dateRange <- seq.Date(from = input$dates[1],
@@ -379,7 +383,7 @@ shinyServer(function(input, output, session) {
   output$dyg1 <- renderDygraph({
     if (input$goButton == 0) return()
     output$quickInfo <- renderText("")
-    cityList <- citySelect()
+    cityList <- citySelectGo()
     title <- paste0(cityList[1,1],", ", cityList[1,4])
     gs <- getStations()
     city1 <- smoother()[[1]]
@@ -401,9 +405,9 @@ shinyServer(function(input, output, session) {
   })
 
     # temperature plot for bottom
-    output$dyg2 <- renderDygraph({
+  output$dyg2 <- renderDygraph({
     if (input$goButton == 0) return()
-    cityList <- citySelect()
+    cityList <- citySelectGo()
     title <- paste0(cityList[2,1],", ", cityList[2,4])
     gs <- getStations()
     city2 <- smoother()[[2]]
@@ -423,13 +427,13 @@ shinyServer(function(input, output, session) {
       dyRoller(rollPeriod = 1) %>%
       dySeries(c("MaxNorm","MidNorm","MinNorm"),color="blue",strokeWidth=0)
     })
-    output$help <- renderText({
-      path <- "inputData/WitherWeatherHelp.html"
-      includeText(path)})
-    output$info <- renderText({
-      path <- "inputData/WitherWeatherInfo.html"
-      includeText(path)})    
-    session$onSessionEnded(function() { citySelect$suspend() })
-    observe({ if (input$stopButton > 0) stopApp() })
+  output$help <- renderText({
+    path <- "inputData/WitherWeatherHelp.html"
+    includeText(path)})
+  output$info <- renderText({
+    path <- "inputData/WitherWeatherInfo.html"
+    includeText(path)})    
+  session$onSessionEnded(function() { citySelect$suspend() })
+  observe({ if (input$stopButton > 0) stopApp() })
   
 })
