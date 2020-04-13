@@ -182,6 +182,9 @@ shinyServer(function(input, output, session) {
 
   getActuals <- eventReactive(input$goButton, {
     stationz <- getStations()
+    if (input$dates[1] > input$dates[2]) {
+      shinyalert(title = "Begin date must precede end date",
+                 type = "error", closeOnClickOutside = TRUE)}
     dateRange <- seq.Date(from = input$dates[1],
                           to = input$dates[2], by = "days")
     # remove leap days because NOAA normals data do not include them
@@ -208,7 +211,10 @@ shinyServer(function(input, output, session) {
           actual <- meteo_tidy_ghcnd(stationid = staID,
             var=c("TMAX","TMIN"),
             date_min = begDate, date_max = endDate)
-
+          if (nrow(actual) < 2) {
+            shinyalert(title = "No data returned. Try changing dates",
+                       type = "error", closeOnClickOutside = TRUE)}
+          
           actual$tmin <- tCelsToFahr(actual$tmin)
           actual$tmax <- tCelsToFahr(actual$tmax)
           actual$tmid <- (actual$tmax + actual$tmin) / 2
@@ -362,6 +368,12 @@ shinyServer(function(input, output, session) {
     city2 <- city2 %>%
       mutate_at(varsMeas, FahrToCels)
   }
+  cit1 <- data.frame(sapply(city1[,3:9], function(x) round(x, 1)))
+  names(cit1) <- varsMeas
+  city1 <- bind_cols(city1[,1:2], cit1)
+  cit2 <- data.frame(sapply(city2[,3:9], function(x) round(x, 1)))
+  names(cit2) <- varsMeas
+  city2 <- bind_cols(city2[,1:2], cit2)
   xt1 <- xts(as.matrix(city1[,3:9]), order.by = city1$date)
   xt2 <- xts(as.matrix(city2[,3:9]), order.by = city2$date)
   xt1 <- na.approx(xt1)
