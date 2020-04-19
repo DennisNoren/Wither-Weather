@@ -45,7 +45,8 @@ shinyServer(function(input, output, session) {
   
   mapText <- paste0("Red markers are city centroids from dataset.","\n", 
     "Purple markers are weather stations from dataset.", "\n",
-    "Use zoom controls, and pan with mouse.", "\n",
+    "Use zoom control buttons, or your mouse roller.", "\n",
+    "You may pan with mouse left button.", "\n",
     "Hover cursor on city to see its name.", "\n",
     "Cyan circles are 25 km and 50 km from selected cities.", "\n",
     "Yellow circles are 200 km from selected cities.")
@@ -401,6 +402,11 @@ shinyServer(function(input, output, session) {
     city1 <- smoother()[[1]]
     msg <- paste("Number of stations = ", (gs[[2]][1]))
     dist <- paste(round((data.frame(gs[[1]][1]))[,5],1), collapse=", ")
+    infoText <- paste("Move cursor within plot to see data values.", "\n",
+      "Drag left to right to zoom dates.", "\n",
+      "Drag top to bottom to zoom values.", "\n",
+      "Double click to reset.")
+    showNotification(infoText, duration=15, type="message")
     dygraph(city1, main = title, group= "temperatures") %>%
       dyAxis("y", yLabel()) %>%
       dyLegend(width = 700) %>%
