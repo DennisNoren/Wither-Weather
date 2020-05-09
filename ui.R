@@ -22,7 +22,17 @@ shinyUI(navbarPage("Whither Weather !!",
     tabPanel('Display length', DT::dataTableOutput('ex1'))),
 
   tabPanel("Temperatures",
-
+    tags$head(
+      tags$style(
+        HTML(".shiny-notification {
+              position:fixed;
+              top: calc(40%);
+              left: calc(25%);
+              }
+              "
+            )
+          )
+        ),
     sidebarLayout(
       sidebarPanel(
         useShinyalert(),
@@ -48,7 +58,7 @@ shinyUI(navbarPage("Whither Weather !!",
     
       mainPanel(
         add_busy_spinner(spin = "fingerprint", color="#115546",
-          position = "bottom-right", height='300px', width='300px'),
+          position = "top-right", height='300px', width='300px'),
         tags$strong(verbatimTextOutput("quickInfo")),     
         dygraphOutput("dyg1"),
         br(),

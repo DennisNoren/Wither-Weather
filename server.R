@@ -213,7 +213,7 @@ shinyServer(function(input, output, session) {
             var=c("TMAX","TMIN"),
             date_min = begDate, date_max = endDate)
           if (nrow(actual) < 2) {
-            shinyalert(title = "No data returned. Try changing dates",
+            shinyalert(title = "No data returned. Try changing dates, or search radius",
                        type = "error", closeOnClickOutside = TRUE)}
           
           actual$tmin <- tCelsToFahr(actual$tmin)
